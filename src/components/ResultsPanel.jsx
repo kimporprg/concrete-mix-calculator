@@ -3,6 +3,7 @@ import StepsTab    from './StepsTab.jsx'
 import MaterialsTab from './MaterialsTab.jsx'
 import VolumesTab  from './VolumesTab.jsx'
 import QuantityTab from './QuantityTab.jsx'
+import { toImperial } from '../lib/aci211.js'
 
 const TABS = [
   { id: 'steps',     label: 'Steps'     },
@@ -11,18 +12,26 @@ const TABS = [
   { id: 'quantity',  label: 'Quantity'  },
 ]
 
-export default function ResultsPanel({ result, inputs }) {
+export default function ResultsPanel({ result: rawResult, inputs, onSaveToLibrary }) {
   const [tab, setTab] = useState('steps')
-  const s = result
+
+  const isImperial = inputs.unitSystem === 'imperial'
+  const result     = isImperial ? toImperial(rawResult) : rawResult
+  const s          = result
+
+  const massUnit  = isImperial ? 'lb/yd³' : 'kg/m³'
+  const pressUnit = isImperial ? 'psi'    : 'MPa'
 
   const metrics = [
-    { label: "f'cr",      value: s.step1.fcr.toFixed(1),        unit: 'MPa'    },
-    { label: 'W/C Ratio', value: s.step2.wc.toFixed(2),         unit: '—'      },
-    { label: 'Cement',    value: s.step4.cement.toFixed(0),      unit: 'kg/m³'  },
-    { label: 'Bags/m³',   value: s.step4.cementBags.toFixed(1),  unit: 'bags'   },
-    { label: 'Water',     value: s.step9.waterField.toFixed(0),   unit: 'kg/m³'  },
-    { label: 'Air',       value: s.step5.airPct.toFixed(1),       unit: '%'      },
+    { label: "f'cr",      value: s.step1.fcr.toFixed(isImperial ? 0 : 1), unit: pressUnit },
+    { label: 'W/CM Ratio',value: s.step2.wc.toFixed(2),                   unit: '—'       },
+    { label: 'Cement',    value: parseFloat(s.ssd.cement).toFixed(0),      unit: massUnit  },
+    { label: 'Bags/m³',   value: s.step4.cementBags.toFixed(1),            unit: 'bags'    },
+    { label: 'Water',     value: s.step9.waterField.toFixed(0),            unit: massUnit  },
+    { label: 'Air',       value: s.step5.airPct.toFixed(1),                unit: '%'       },
   ]
+
+  const hasWarn = s.warnings.some(w => w.level === 'warn')
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 900 }}>
@@ -36,13 +45,23 @@ export default function ResultsPanel({ result, inputs }) {
             </div>
             <div style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 3 }}>
               {inputs.mixId} · {inputs.grade} · {inputs.cementType} · {inputs.placement}
+              {inputs.exposureClass !== 'None' && ` · ${inputs.exposureClass}`}
+              {inputs.scmType !== 'none' && ` · ${inputs.scmType.toUpperCase()} ${inputs.scmReplace}%`}
+              {isImperial && ' · Imperial'}
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
             <span className="badge badge-ok">{inputs.grade}</span>
-            <span className={`badge ${s.warnings.some(w => w.level === 'warn') ? 'badge-warn' : 'badge-ok'}`}>
-              {s.warnings.some(w => w.level === 'warn') ? 'Review' : 'Compliant'}
+            <span className={`badge ${hasWarn ? 'badge-warn' : 'badge-ok'}`}>
+              {hasWarn ? 'Review' : 'Compliant'}
             </span>
+            <button
+              className="btn btn-ghost btn-sm"
+              style={{ fontSize: 11 }}
+              onClick={onSaveToLibrary}
+            >
+              Save to Library
+            </button>
           </div>
         </div>
 
@@ -61,7 +80,7 @@ export default function ResultsPanel({ result, inputs }) {
       {/* Compliance alerts */}
       {s.warnings.map((w, i) => (
         <div key={i} className={`alert alert-${w.level}`}>
-          {w.message}
+          {w.msg}
         </div>
       ))}
 
@@ -80,7 +99,7 @@ export default function ResultsPanel({ result, inputs }) {
 
       {/* Tab content */}
       <div>
-        {tab === 'steps'     && <StepsTab     result={result} />}
+        {tab === 'steps'     && <StepsTab     result={result} isImperial={isImperial} />}
         {tab === 'materials' && <MaterialsTab result={result} inputs={inputs} />}
         {tab === 'volumes'   && <VolumesTab   result={result} />}
         {tab === 'quantity'  && <QuantityTab  result={result} inputs={inputs} />}

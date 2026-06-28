@@ -1,4 +1,23 @@
-import { GRADES, SLUMP_OPTIONS, AGG_SIZES, CEMENT_TYPES, PLACEMENTS } from '../lib/aci211.js'
+import {
+  GRADES, SLUMP_OPTIONS, AGG_SIZES, CEMENT_TYPES, PLACEMENTS,
+  EXPOSURE_CLASSES, STDDEV_GUIDE, ADMIXTURE_WATER_REDUCTION,
+} from '../lib/aci211.js'
+
+const SCM_OPTIONS = [
+  { value: 'none',     label: 'None' },
+  { value: 'flyash_c', label: 'Fly Ash Class C' },
+  { value: 'flyash_f', label: 'Fly Ash Class F' },
+  { value: 'ggbs',     label: 'GGBS / Slag' },
+  { value: 'silica',   label: 'Silica Fume' },
+]
+
+const ADMIXTURE_OPTIONS = [
+  { value: 'none',        label: 'None' },
+  { value: 'wr_normal',   label: 'Water Reducer Type A (−8%)' },
+  { value: 'wr_mid',      label: 'Mid-Range WR (−12%)' },
+  { value: 'hrwr',        label: 'Superplasticizer Type F (−20%)' },
+  { value: 'hrwr_retard', label: 'HRWR + Retarder Type G (−20%)' },
+]
 
 export default function InputPanel({ inputs, setInputs, onCalculate }) {
   const set = (key, val) => setInputs(prev => ({ ...prev, [key]: val }))
@@ -7,8 +26,29 @@ export default function InputPanel({ inputs, setInputs, onCalculate }) {
     setInputs(prev => ({ ...prev, grade, fc }))
   }
 
+  const isMetric = inputs.unitSystem !== 'imperial'
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+
+      {/* Unit System toggle — top */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span className="section-label" style={{ margin: 0 }}>Unit System</span>
+        <div className="pill-group" style={{ gap: 4 }}>
+          {['metric', 'imperial'].map(u => (
+            <button
+              key={u}
+              className={`pill ${inputs.unitSystem === u ? 'active' : ''}`}
+              style={{ fontSize: 12, minHeight: 32, padding: '0 12px' }}
+              onClick={() => set('unitSystem', u)}
+            >
+              {u === 'metric' ? 'SI (kg/m³)' : 'Imperial (lb/yd³)'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <hr className="divider" style={{ margin: 0 }} />
 
       {/* Project Info */}
       <section>
@@ -59,22 +99,44 @@ export default function InputPanel({ inputs, setInputs, onCalculate }) {
 
           <div className="grid-2">
             <div className="field">
-              <label>f'c (MPa)</label>
+              <label>f'c ({isMetric ? 'MPa' : 'psi'})</label>
               <input
                 type="number"
-                min="10" max="60" step="1"
+                min="10" max="80" step="1"
                 value={inputs.fc}
                 onChange={e => set('fc', parseFloat(e.target.value))}
               />
             </div>
             <div className="field">
-              <label>Std Dev (MPa)</label>
+              <label>
+                Std Dev ({isMetric ? 'MPa' : 'psi'})
+                <span style={{ color: 'var(--accent)', marginLeft: 6, fontSize: 10, fontWeight: 600, cursor: 'help' }} title={STDDEV_GUIDE.map(g => `${g.label}: ${g.value}`).join(' | ')}>
+                  ?
+                </span>
+              </label>
               <input
                 type="number"
                 min="0" max="10" step="0.1"
                 value={inputs.stddev}
                 onChange={e => set('stddev', parseFloat(e.target.value))}
               />
+              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 4 }}>
+                {STDDEV_GUIDE.map(g => (
+                  <button
+                    key={g.label}
+                    onClick={() => set('stddev', g.value)}
+                    style={{
+                      fontSize: 10, padding: '2px 7px', borderRadius: 4,
+                      border: '1px solid var(--border)', background: 'transparent',
+                      color: inputs.stddev === g.value ? 'var(--accent)' : 'var(--text-3)',
+                      cursor: 'pointer', fontFamily: 'var(--font)',
+                      borderColor: inputs.stddev === g.value ? 'var(--accent)' : 'var(--border)',
+                    }}
+                  >
+                    {g.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -151,6 +213,80 @@ export default function InputPanel({ inputs, setInputs, onCalculate }) {
               </button>
             </div>
           </div>
+
+          {/* Exposure Class */}
+          <div className="field">
+            <label>Exposure Class (ACI 318)</label>
+            <select value={inputs.exposureClass} onChange={e => set('exposureClass', e.target.value)}>
+              {Object.keys(EXPOSURE_CLASSES).map(k => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+            {inputs.exposureClass !== 'None' && EXPOSURE_CLASSES[inputs.exposureClass] && (
+              <div style={{
+                marginTop: 6, padding: '7px 10px', background: 'var(--accent-lt)',
+                border: '1px solid var(--accent)', borderRadius: 'var(--r-sm)',
+                fontSize: 11, color: 'var(--accent)', lineHeight: 1.55,
+              }}>
+                {EXPOSURE_CLASSES[inputs.exposureClass].maxWCM && `Max W/CM: ${EXPOSURE_CLASSES[inputs.exposureClass].maxWCM}  `}
+                {EXPOSURE_CLASSES[inputs.exposureClass].minCement && `Min cement: ${EXPOSURE_CLASSES[inputs.exposureClass].minCement} kg/m³  `}
+                {EXPOSURE_CLASSES[inputs.exposureClass].minFc && `Min f'c: ${EXPOSURE_CLASSES[inputs.exposureClass].minFc} MPa`}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <hr className="divider" style={{ margin: 0 }} />
+
+      {/* Admixtures */}
+      <section>
+        <div className="section-label">Chemical Admixtures</div>
+        <div className="field">
+          <label>Water Reducer / Plasticizer</label>
+          <select value={inputs.admixture} onChange={e => set('admixture', e.target.value)}>
+            {ADMIXTURE_OPTIONS.map(a => (
+              <option key={a.value} value={a.value}>{a.label}</option>
+            ))}
+          </select>
+        </div>
+      </section>
+
+      <hr className="divider" style={{ margin: 0 }} />
+
+      {/* SCM */}
+      <section>
+        <div className="section-label">Supplementary Cementitious Materials</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="field">
+            <label>SCM Type</label>
+            <select value={inputs.scmType} onChange={e => set('scmType', e.target.value)}>
+              {SCM_OPTIONS.map(s => (
+                <option key={s.value} value={s.value}>{s.label}</option>
+              ))}
+            </select>
+          </div>
+          {inputs.scmType !== 'none' && (
+            <div className="field">
+              <label>Replacement Level (%)</label>
+              <input
+                type="number"
+                min="5" max="50" step="1"
+                value={inputs.scmReplace}
+                onChange={e => set('scmReplace', parseFloat(e.target.value))}
+              />
+              <div style={{
+                marginTop: 6, padding: '6px 10px', background: 'var(--surface-2)',
+                border: '1px solid var(--border)', borderRadius: 'var(--r-sm)',
+                fontSize: 11, color: 'var(--text-3)',
+              }}>
+                {inputs.scmType === 'flyash_c' && 'Class C fly ash: 15–40% typical replacement'}
+                {inputs.scmType === 'flyash_f' && 'Class F fly ash: 15–25% typical; may slow strength gain'}
+                {inputs.scmType === 'ggbs' && 'GGBS: 25–50% typical; good sulfate resistance'}
+                {inputs.scmType === 'silica' && 'Silica fume: 5–15% typical; reduces permeability significantly'}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -201,7 +337,7 @@ export default function InputPanel({ inputs, setInputs, onCalculate }) {
 
           <div className="grid-2">
             <div className="field">
-              <label>DRUW (kg/m3)</label>
+              <label>DRUW ({isMetric ? 'kg/m³' : 'lb/ft³'})</label>
               <input
                 type="number" step="10"
                 value={inputs.druw}

@@ -1,15 +1,17 @@
 export default function VolumesTab({ result: r }) {
+  const hasSCM = r.scmType && r.scmType !== 'none' && r.step6.Vscm > 0
+
   const volumes = [
-    { label: 'Cement',      v: r.step6.Vc,    color: '#8B98A8' },
-    { label: 'Water',       v: r.step6.Vw,    color: '#2478CC' },
-    { label: 'Air',         v: r.step5.Vair,  color: '#4D5A6A' },
-    { label: 'Coarse Agg.', v: r.step7.Vca,   color: '#22A55A' },
-    { label: 'Fine Agg.',   v: r.step8.Vfa,   color: '#D4810A' },
+    { label: 'Cement',      v: r.step6.Vc,   color: '#8B98A8' },
+    ...(hasSCM ? [{ label: scmLabel(r.scmType), v: r.step6.Vscm, color: '#9B59B6' }] : []),
+    { label: 'Water',       v: r.step6.Vw,   color: '#2478CC' },
+    { label: 'Air',         v: r.step5.Vair, color: '#4D5A6A' },
+    { label: 'Coarse Agg.', v: r.step7.Vca,  color: '#22A55A' },
+    { label: 'Fine Agg.',   v: r.step8.Vfa,  color: '#D4810A' },
   ]
 
   const total = volumes.reduce((s, v) => s + v.v, 0)
 
-  // Build SVG rects
   let x = 0
   const W = 320, H = 36
   const rects = volumes.map(v => {
@@ -32,8 +34,6 @@ export default function VolumesTab({ result: r }) {
             ))}
           </svg>
         </div>
-
-        {/* Legend */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', marginTop: 14 }}>
           {volumes.map(v => (
             <div key={v.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -88,4 +88,8 @@ export default function VolumesTab({ result: r }) {
 
     </div>
   )
+}
+
+function scmLabel(type) {
+  return { flyash_c:'Fly Ash C', flyash_f:'Fly Ash F', ggbs:'GGBS', silica:'Silica Fume' }[type] || type
 }
