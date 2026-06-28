@@ -4,7 +4,14 @@ export function useLocalStorage(key, defaultValue) {
   const [value, setValue] = useState(() => {
     try {
       const stored = localStorage.getItem(key)
-      return stored ? JSON.parse(stored) : defaultValue
+      if (!stored) return defaultValue
+      const parsed = JSON.parse(stored)
+      // Merge with defaultValue so new fields always get their defaults
+      // when an older stored object is missing them
+      if (defaultValue && typeof defaultValue === 'object' && !Array.isArray(defaultValue)) {
+        return { ...defaultValue, ...parsed }
+      }
+      return parsed
     } catch {
       return defaultValue
     }
