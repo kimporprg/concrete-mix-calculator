@@ -1,75 +1,91 @@
-export default function VolumesTab({ result }) {
-  const { volumes } = result
-  const segments = [
-    { label: 'Cement', value: volumes.Vc,   color: '#8FA3B1' },
-    { label: 'Water',  value: volumes.Vw,   color: '#1D6FA4' },
-    { label: 'Sand',   value: volumes.Vfa,  color: '#C47A00' },
-    { label: 'Coarse', value: volumes.Vca,  color: '#5D7185' },
-    { label: 'Air',    value: volumes.Vair, color: '#2C3E50' },
+export default function VolumesTab({ result: r }) {
+  const volumes = [
+    { label: 'Cement',      v: r.step6.Vc,    color: '#8B98A8' },
+    { label: 'Water',       v: r.step6.Vw,    color: '#2478CC' },
+    { label: 'Air',         v: r.step5.Vair,  color: '#4D5A6A' },
+    { label: 'Coarse Agg.', v: r.step7.Vca,   color: '#22A55A' },
+    { label: 'Fine Agg.',   v: r.step8.Vfa,   color: '#D4810A' },
   ]
-  const total = volumes.total
 
-  // Build SVG stacked bar
-  let cx = 0
-  const bars = segments.map(s => {
-    const w = (s.value / 1) * 320
-    const bar = { ...s, x: cx, w }
-    cx += w
-    return bar
+  const total = volumes.reduce((s, v) => s + v.v, 0)
+
+  // Build SVG rects
+  let x = 0
+  const W = 320, H = 36
+  const rects = volumes.map(v => {
+    const w = (v.v / total) * W
+    const rect = { x, w, color: v.color, label: v.label, v: v.v }
+    x += w
+    return rect
   })
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {/* Stacked bar */}
-      <div className="card-sm">
-        <div className="section-title">Absolute Volume Distribution (1 m³)</div>
-        <svg viewBox="0 0 320 36" style={{ width: '100%', borderRadius: 6, overflow: 'hidden', marginBottom: 12 }}>
-          {bars.map(b => (
-            <rect key={b.label} x={b.x} y={0} width={Math.max(b.w,0)} height={36} fill={b.color} />
-          ))}
-        </svg>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+      {/* SVG stacked bar */}
+      <div className="card">
+        <div className="section-label" style={{ marginBottom: 14 }}>Absolute Volume Distribution</div>
+        <div style={{ overflowX: 'auto' }}>
+          <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', minWidth: 240, height: 'auto', borderRadius: 6, overflow: 'hidden', display: 'block' }}>
+            {rects.map((r, i) => (
+              <rect key={i} x={r.x} y={0} width={r.w} height={H} fill={r.color} />
+            ))}
+          </svg>
+        </div>
+
         {/* Legend */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px' }}>
-          {segments.map(s => (
-            <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: s.color, flexShrink: 0 }} />
-              <span style={{ fontSize: 12, color: 'var(--muted)' }}>{s.label}</span>
-              <span style={{ fontSize: 12, fontFamily: 'var(--font-mono)', color: 'var(--white)' }}>{(s.value*100).toFixed(1)}%</span>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', marginTop: 14 }}>
+          {volumes.map(v => (
+            <div key={v.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 10, height: 10, borderRadius: 2, background: v.color, flexShrink: 0 }} />
+              <span style={{ fontSize: 12, color: 'var(--text-2)' }}>{v.label}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Detail table */}
-      <div className="card-sm">
-        <div className="section-title">Volume Breakdown</div>
-        <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th style={{ textAlign:'left', color:'var(--muted)', padding:'6px 0', fontWeight:600, fontSize:11, textTransform:'uppercase' }}>Component</th>
-              <th style={{ textAlign:'right', color:'var(--muted)', padding:'6px 0', fontWeight:600, fontSize:11, textTransform:'uppercase' }}>Volume (m³)</th>
-              <th style={{ textAlign:'right', color:'var(--muted)', padding:'6px 0', fontWeight:600, fontSize:11, textTransform:'uppercase' }}>%</th>
-            </tr>
-          </thead>
-          <tbody>
-            {segments.map(s => (
-              <tr key={s.label}>
-                <td style={{ padding:'7px 0', borderBottom:'1px solid var(--steel)', color:'var(--white)' }}>
-                  <span style={{ display:'inline-block', width:8, height:8, borderRadius:'50%', background:s.color, marginRight:8 }} />
-                  {s.label}
-                </td>
-                <td style={{ padding:'7px 0', borderBottom:'1px solid var(--steel)', textAlign:'right', fontFamily:'var(--font-mono)', color:'var(--accent)' }}>{s.value.toFixed(4)}</td>
-                <td style={{ padding:'7px 0', borderBottom:'1px solid var(--steel)', textAlign:'right', fontFamily:'var(--font-mono)', color:'var(--muted)' }}>{(s.value*100).toFixed(1)}%</td>
+      {/* Volume table */}
+      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <table className="step-table" style={{ minWidth: 300 }}>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th style={{ textAlign: 'right' }}>Volume (m³)</th>
+                <th style={{ textAlign: 'right' }}>Share (%)</th>
               </tr>
-            ))}
-            <tr>
-              <td style={{ padding:'7px 0', color:'var(--white)', fontWeight:700 }}>Total</td>
-              <td style={{ padding:'7px 0', textAlign:'right', fontFamily:'var(--font-mono)', color: Math.abs(total-1)<0.025 ? '#2ecc71':'#e74c3c', fontWeight:700 }}>{total.toFixed(4)}</td>
-              <td style={{ padding:'7px 0', textAlign:'right', fontFamily:'var(--font-mono)', color:'var(--muted)', fontWeight:700 }}>{(total*100).toFixed(1)}%</td>
-            </tr>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {volumes.map(v => (
+                <tr key={v.label}>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{ width: 8, height: 8, borderRadius: 2, background: v.color, flexShrink: 0 }} />
+                      <span style={{ color: 'var(--text)', fontWeight: 500 }}>{v.label}</span>
+                    </div>
+                  </td>
+                  <td style={{ textAlign: 'right', fontFamily: 'var(--mono)', color: 'var(--text-2)' }}>
+                    {v.v.toFixed(4)}
+                  </td>
+                  <td style={{ textAlign: 'right', fontFamily: 'var(--mono)', color: 'var(--accent)' }}>
+                    {(v.v / total * 100).toFixed(1)}%
+                  </td>
+                </tr>
+              ))}
+              <tr>
+                <td style={{ fontWeight: 700, color: 'var(--text)' }}>Total</td>
+                <td style={{ textAlign: 'right', fontFamily: 'var(--mono)', fontWeight: 700, color: 'var(--text)' }}>
+                  {total.toFixed(4)}
+                </td>
+                <td style={{ textAlign: 'right', fontFamily: 'var(--mono)', color: 'var(--text-3)' }}>
+                  100.0%
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+
     </div>
   )
 }
