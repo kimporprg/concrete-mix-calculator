@@ -2,11 +2,11 @@
 export default function VolumesTab({ result }) {
   const { step6, step5, step7, step8, step10 } = result
   const segs = [
-    { label:'Water',      vol:step6.Vw,   color:'#1D6FA4' },
-    { label:'Cement',     vol:step6.Vc,   color:'#2C3E50' },
-    { label:'Air',        vol:step5.Vair, color:'#5D7185' },
-    { label:'Coarse Agg.',vol:step7.Vca,  color:'#4A6B5B' },
-    { label:'Fine Agg.',  vol:step8.Vfa,  color:'#C47A00' },
+    { label:'Water',      vol:step6.Vw,   color:'#E0E0E0' },
+    { label:'Cement',     vol:step6.Vc,   color:'#B0B0B0' },
+    { label:'Air',        vol:step5.Vair, color:'#808080' },
+    { label:'Coarse Agg.',vol:step7.Vca,  color:'#525252' },
+    { label:'Fine Agg.',  vol:step8.Vfa,  color:'#2E2E2E' },
   ]
   const total = step10.totalVol
   let cx = 0

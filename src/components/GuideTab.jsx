@@ -30,7 +30,7 @@ const SECTIONS = [
     ],
   },
   {
-    id: 'workability', color: '#1D7A4F', title: 'Workability & Aggregate',
+    id: 'workability', color: '#C0C0C0', title: 'Workability & Aggregate',
     items: [
       { sym: 'Slump', name: 'Target Slump Range',
         body: 'How fluid the fresh concrete is — more slump needs more water, which raises W/C and reduces strength. Drives the mixing water lookup in ACI Table 6.3.3.',
@@ -212,7 +212,7 @@ function FieldCard({ item, color }) {
               <div style={{
                 fontSize: 12, lineHeight: 1.6, whiteSpace: 'pre-wrap',
                 fontFamily: item.extra.mono ? 'var(--font-mono)' : 'inherit',
-                color: item.extra.mono ? '#7EC8E3' : 'var(--line)',
+                color: item.extra.mono ? '#D0D0D0' : 'var(--line)',
               }}>
                 {item.extra.text}
               </div>

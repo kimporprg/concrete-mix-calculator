@@ -13,10 +13,10 @@ export default function MaterialsTab({ result }) {
   const pct   = v => (v / total * 100).toFixed(1)
 
   const BARS = [
-    { label:'Cement',        val:cement, pct:pct(cement), color:'#1D6FA4' },
-    { label:'Water (SSD)',   val:waterS, pct:pct(waterS), color:'#5DA0C4' },
-    { label:'Sand (SSD)',    val:sandS,  pct:pct(sandS),  color:'#C47A00' },
-    { label:'Coarse Agg.',   val:caS,    pct:pct(caS),    color:'#5D7185' },
+    { label:'Cement',        val:cement, pct:pct(cement), color:'#E0E0E0' },
+    { label:'Water (SSD)',   val:waterS, pct:pct(waterS), color:'#9A9A9A' },
+    { label:'Sand (SSD)',    val:sandS,  pct:pct(sandS),  color:'#6E6E6E' },
+    { label:'Coarse Agg.',   val:caS,    pct:pct(caS),    color:'#454545' },
   ]
   const maxVal = Math.max(cement, waterS, sandS, caS)
 
