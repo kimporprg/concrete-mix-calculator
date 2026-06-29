@@ -1,436 +1,215 @@
-/* ── Design tokens ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+/* ─── Tokens ──────────────────────────────────────────────────── */
 :root {
-  --bg:        #0D1117;
-  --surface:   #161B22;
-  --surface-2: #1E242D;
-  --surface-3: #262D38;
-  --border:    #2A3140;
-  --border-hi: #3D4D60;
-
-  --text:      #E8EDF2;
-  --text-2:    #8B98A8;
-  --text-3:    #4D5A6A;
-
-  --accent:    #2478CC;
-  --accent-dk: #1A5FA3;
-  --accent-lt: rgba(36,120,204,.13);
-
-  --ok:        #22A55A;
-  --ok-lt:     rgba(34,165,90,.13);
-  --warn:      #D4810A;
-  --warn-lt:   rgba(212,129,10,.13);
-  --danger:    #D44235;
-  --danger-lt: rgba(212,66,53,.13);
-
-  /* System sans-serif — SF Pro on Apple, Segoe UI on Windows, Roboto on Android */
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Cascadia Mono', Consolas, Menlo, 'Courier New', monospace;
-
-  --r-xs:  4px;
-  --r-sm:  8px;
-  --r-md: 10px;
-  --r-lg: 14px;
-  --r-xl: 20px;
+  --ink:       #0F2027;
+  --ink2:      #1B3442;
+  --steel:     #2C3E50;
+  --mid:       #5D7185;
+  --muted:     #8FA3B1;
+  --line:      rgba(255,255,255,0.09);
+  --surface:   rgba(255,255,255,0.04);
+  --white:     #FFFFFF;
+  --accent:    #1D6FA4;
+  --accent-lt: rgba(29,111,164,0.15);
+  --accent-dk: #145180;
+  --warn:      #C47A00;
+  --ok:        #1D7A4F;
+  --danger:    #C0392B;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 16px;
+  /* safe area */
+  --sat: env(safe-area-inset-top,    0px);
+  --sar: env(safe-area-inset-right,  0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left,   0px);
 }
 
-/* ── Reset ── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  /* Improve touch responsiveness on iOS */
+/* ─── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
 
-html {
-  height: 100%;
-  /* Prevent iOS font size zoom on input focus — critical for iPhone */
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  /* Smooth scroll on iOS */
-  scroll-behavior: smooth;
-}
-
-body, #root {
-  height: 100%;
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* Prevent horizontal scroll at root level */
-  overflow-x: hidden;
-  /* Prevent iOS overscroll bounce on body */
+body {
+  font-family: var(--font-body);
+  background: var(--ink);
+  color: var(--white);
+  font-size: 15px;
+  line-height: 1.6;
   overscroll-behavior: none;
+  /* Windows 11 scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--mid) transparent;
 }
 
-/* ── Scrollbars — WebKit (macOS/iOS Safari, Chrome) ── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-thumb { background: var(--mid); border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 3px; }
-::-webkit-scrollbar-corner { background: transparent; }
 
-/* Windows 11 scrollbar (thin overlay style) */
-* { scrollbar-width: thin; scrollbar-color: var(--border-hi) transparent; }
+/* ─── Layout helpers ──────────────────────────────────────────── */
+.safe-top    { padding-top:    calc(12px + var(--sat)); }
+.safe-bottom { padding-bottom: calc(12px + var(--sab)); }
 
-/* ── Buttons ── */
+/* ─── Buttons ─────────────────────────────────────────────────── */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  /* 44px minimum tap target — Apple HIG + WCAG */
-  min-height: 44px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: none; border-radius: var(--r-md);
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  cursor: pointer; user-select: none;
+  transition: opacity .15s, transform .1s, background .15s;
+  -webkit-user-select: none;
+  touch-action: manipulation;   /* iOS: no 300ms delay */
+  min-height: 44px;             /* Apple HIG minimum touch target */
   padding: 0 18px;
-  border-radius: var(--r-md);
-  font-size: 14px;
-  font-weight: 600;
-  font-family: var(--font);
-  letter-spacing: -0.01em;
-  cursor: pointer;
-  border: none;
-  transition: background 0.12s, opacity 0.1s, transform 0.08s;
-  white-space: nowrap;
-  /* iOS: remove default UA button styling */
-  -webkit-appearance: none;
-  appearance: none;
-  /* Prevent text selection on double-tap */
-  user-select: none;
-  -webkit-user-select: none;
-  /* Touch action: allow tap but not pan interference */
-  touch-action: manipulation;
 }
-.btn:active {
-  opacity: 0.75;
-  transform: scale(0.97);
+.btn:active { transform: scale(0.97); opacity: 0.88; }
+
+.btn-primary {
+  background: var(--accent); color: var(--white);
+  box-shadow: 0 2px 8px rgba(29,111,164,0.35);
 }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: var(--accent-dk); }
-/* Windows high contrast / focus visible */
-.btn-primary:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
+.btn-primary:hover { background: #1a5f8f; }
+
 .btn-ghost {
-  background: var(--surface-3);
-  color: var(--text-2);
-  border: 1px solid var(--border);
+  background: transparent; color: var(--muted);
+  border: 1.5px solid var(--line);
 }
-.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-.btn-ghost:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.btn-ghost:hover { border-color: var(--muted); color: var(--white); }
+
+.btn-danger {
+  background: transparent; color: var(--danger);
+  border: 1.5px solid var(--danger);
 }
+
 .btn-full { width: 100%; }
-.btn-sm { min-height: 36px; padding: 0 14px; font-size: 13px; }
 
-/* ── Cards ── */
+/* Mobile: even bigger buttons */
+@media (max-width: 767px) {
+  .btn { min-height: 52px; font-size: 15px; border-radius: var(--r-lg); }
+  .btn-sm-mobile { min-height: 44px !important; font-size: 13px !important; }
+}
+
+/* ─── Cards ───────────────────────────────────────────────────── */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 18px;
+  background: var(--ink2); border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  padding: 16px;
 }
-.card-sm {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 12px 14px;
-}
+.card-sm { padding: 12px 14px; border-radius: var(--r-md); }
 
-/* ── Tabs ── */
+/* ─── Tabs ────────────────────────────────────────────────────── */
 .tabs {
-  display: flex;
-  gap: 2px;
-  background: var(--surface-2);
-  border-radius: var(--r-md);
-  padding: 3px;
-  border: 1px solid var(--border);
+  display: flex; gap: 2px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.tabs::-webkit-scrollbar { display: none; }
+
 .tab {
-  flex: 1;
-  min-height: 38px;
-  padding: 6px 4px;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-2);
-  border-radius: var(--r-sm);
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  font-family: var(--font);
-  letter-spacing: 0.01em;
-  transition: background 0.12s, color 0.12s;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
-  /* Ensure min 44px touch target including surroundings */
-  min-width: 44px;
-}
-.tab:hover { color: var(--text); }
-.tab.active { background: var(--accent); color: #fff; }
-.tab:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-}
-
-/* ── Badges ── */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 9px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-}
-.badge-ok     { background: var(--ok-lt);     color: #2ecc71; }
-.badge-warn   { background: var(--warn-lt);   color: #e67e22; }
-.badge-danger { background: var(--danger-lt); color: #e74c3c; }
-
-/* ── Metric tiles ── */
-.metric-tile {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 14px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  min-width: 0; /* prevent grid blowout */
-}
-.metric-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.metric-value {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text);
-  font-family: var(--mono);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  /* Prevent layout shift when value changes */
-  contain: layout;
-}
-.metric-unit {
-  font-size: 11px;
-  color: var(--text-3);
-}
-
-/* ── Step table ── */
-.step-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.step-table th {
-  text-align: left;
-  padding: 9px 11px;
-  background: var(--surface-2);
-  color: var(--text-3);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  white-space: nowrap;
-  border-bottom: 1px solid var(--border);
-  /* Sticky headers for long tables on iOS */
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-.step-table td {
-  padding: 10px 11px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-.step-table tr:last-child td { border-bottom: none; }
-.step-table tr:hover td { background: rgba(255,255,255,.02); }
-.step-num    { color: var(--accent); font-family: var(--mono); font-weight: 700; width: 32px; font-size: 12px; }
-.step-name   { color: var(--text); font-weight: 600; min-width: 140px; }
-.step-ref    { color: var(--text-3); font-size: 11px; white-space: nowrap; }
-.step-result { color: var(--accent); font-family: var(--mono); font-weight: 600; text-align: right; white-space: nowrap; }
-.step-formula{ color: var(--text-3); font-size: 11px; font-family: var(--mono); margin-top: 3px; }
-
-/* ── Bar track ── */
-.bar-track { background: var(--surface-3); border-radius: 999px; height: 7px; overflow: hidden; }
-.bar-fill  { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.45s ease; }
-
-/* ── Alerts ── */
-.alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  padding: 11px 13px;
-  border-radius: var(--r-md);
-  font-size: 13px;
-  line-height: 1.55;
-  font-weight: 500;
-  border: 1px solid transparent;
-}
-.alert-ok     { background: var(--ok-lt);     border-color: rgba(34,165,90,.28);  color: #2ecc71; }
-.alert-warn   { background: var(--warn-lt);   border-color: rgba(212,129,10,.28); color: #e67e22; }
-.alert-danger { background: var(--danger-lt); border-color: rgba(212,66,53,.28);  color: #e74c3c; }
-
-/* ── Divider ── */
-.divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
-
-/* ── Form inputs ── */
-.field { display: flex; flex-direction: column; gap: 5px; }
-
-.field label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.field input,
-.field select {
-  width: 100%;
-  /* 44px minimum for touch — iOS HIG */
-  min-height: 44px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: var(--r-sm);
-  padding: 0 12px;
-  /* 16px minimum to prevent iOS auto-zoom on focus */
-  font-size: 16px;
-  font-family: var(--font);
-  transition: border-color 0.12s, box-shadow 0.12s;
-  -webkit-appearance: none;
-  appearance: none;
-  /* Remove iOS inner shadow on inputs */
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-.field input:focus,
-.field select:focus {
-  outline: none;
-  border-color: var(--accent);
-  /* Windows-style focus ring */
-  box-shadow: 0 0 0 2px var(--accent-lt);
-}
-.field input::placeholder { color: var(--text-3); }
-
-/* iOS: style number inputs */
-.field input[type="number"] {
-  -moz-appearance: textfield;
-}
-.field input[type="number"]::-webkit-inner-spin-button,
-.field input[type="number"]::-webkit-outer-spin-button {
-  /* Keep spinners on desktop for precision, hide on mobile */
-  opacity: 0.5;
-}
-
-.field select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%234D5A6A' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 32px;
-  cursor: pointer;
-}
-
-/* ── Pill group ── */
-.pill-group { display: flex; gap: 6px; flex-wrap: wrap; }
-.pill {
+  padding: 8px 14px;
+  border: none; border-radius: var(--r-sm);
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+  background: var(--surface); color: var(--muted);
+  transition: background .15s, color .15s;
   min-height: 36px;
-  padding: 0 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-2);
-  font-family: var(--font);
-  transition: border-color 0.12s, color 0.12s, background 0.12s;
-  display: inline-flex;
-  align-items: center;
   touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-appearance: none;
-  appearance: none;
-  /* Minimum touch target */
-  min-width: 44px;
-  justify-content: center;
 }
-.pill:hover { border-color: var(--accent); color: var(--accent); }
-.pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-.pill:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.tab.active { background: var(--accent); color: var(--white); }
+
+/* ─── Metric tiles ────────────────────────────────────────────── */
+.metric-tile {
+  background: var(--ink2); border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  padding: 12px 10px; text-align: center;
+}
+.metric-label  { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.metric-value  { font-family: var(--font-mono); font-size: 20px; font-weight: 700; color: var(--white); line-height: 1.1; }
+.metric-unit   { font-size: 10px; color: var(--mid); margin-top: 2px; }
+
+/* ─── Alerts ──────────────────────────────────────────────────── */
+.alert {
+  border-radius: var(--r-sm); padding: 10px 14px;
+  font-size: 13px; line-height: 1.45; margin-bottom: 6px;
+}
+.alert-ok     { background: rgba(29,122,79,0.15);  color: #5DD99A; border-left: 3px solid var(--ok); }
+.alert-warn   { background: rgba(196,122,0,0.15);  color: #F0B429; border-left: 3px solid var(--warn); }
+.alert-danger { background: rgba(192,57,43,0.15);  color: #F87171; border-left: 3px solid var(--danger); }
+
+/* ─── Badges ──────────────────────────────────────────────────── */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.badge-ok     { background: rgba(29,122,79,0.2);   color: #5DD99A; }
+.badge-warn   { background: rgba(196,122,0,0.2);   color: #F0B429; }
+.badge-danger { background: rgba(192,57,43,0.2);   color: #F87171; }
+.badge-grade  { background: var(--ok);             color: var(--white); }
+
+/* ─── Bar track ───────────────────────────────────────────────── */
+.bar-track { height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 3px; transition: width .4s ease; }
+
+/* ─── Step table ──────────────────────────────────────────────── */
+.step-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.step-table th { padding: 8px 10px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 1px solid var(--line); }
+.step-table td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--muted); }
+.step-table tr:last-child td { border-bottom: none; }
+.step-num  { font-family: var(--font-mono); font-size: 11px; font-weight: 700; background: var(--accent-lt); color: var(--accent); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+.step-name { color: var(--white); font-weight: 600; font-size: 13px; }
+.step-ref  { font-family: var(--font-mono); font-size: 10px; color: var(--mid); }
+.step-result { font-family: var(--font-mono); font-weight: 700; color: var(--white); font-size: 13px; }
+
+/* ─── Divider ─────────────────────────────────────────────────── */
+.divider { border: none; border-top: 1px solid var(--line); margin: 12px 0; }
+
+/* ─── Inputs ──────────────────────────────────────────────────── */
+.field-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+
+.field-input {
+  width: 100%;
+  background: var(--surface); border: 1.5px solid var(--line);
+  border-radius: var(--r-sm); color: var(--white);
+  font-family: var(--font-body); font-size: 14px;
+  padding: 10px 12px;
+  transition: border-color .15s;
+  /* iOS: prevent zoom on focus */
+  font-size: max(16px, 14px);
+}
+.field-input:focus { outline: none; border-color: var(--accent); }
+
+/* iOS-specific */
+@supports (-webkit-touch-callout: none) {
+  .field-input { font-size: 16px; }  /* prevent auto-zoom */
 }
 
-/* ── Section label ── */
+select.field-input { -webkit-appearance: none; appearance: none; }
+
+/* ─── Pill toggle buttons ─────────────────────────────────────── */
+.pill-group { display: flex; gap: 5px; flex-wrap: wrap; }
+.pill {
+  padding: 8px 14px;
+  border: 1.5px solid var(--line); border-radius: 20px;
+  font-size: 13px; font-weight: 600;
+  background: transparent; color: var(--muted);
+  cursor: pointer; transition: all .15s;
+  touch-action: manipulation;
+  min-height: 38px;
+}
+.pill.active { background: var(--accent); border-color: var(--accent); color: var(--white); }
+@media (max-width: 767px) { .pill { min-height: 44px; font-size: 14px; } }
+
+/* ─── Section label ───────────────────────────────────────────── */
 .section-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  margin-bottom: 10px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent);
+  padding: 6px 0 8px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 14px;
 }
 
-/* ── Grid helpers ── */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-
-/* Collapse 3-col → 2-col on narrow screens (iPhone SE, mini) */
-@media (max-width: 400px) {
-  .grid-3 { grid-template-columns: 1fr 1fr; }
-}
-
-/* ── Utility ── */
-.mono { font-family: var(--mono); }
-.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-/* ── iOS safe area helpers ── */
-.safe-top    { padding-top:    env(safe-area-inset-top);    }
-.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
-
-/* ── Windows 11 / pointer-based device enhancements ── */
-@media (pointer: fine) {
-  /* Allow tighter spacing with a mouse */
-  .pill { min-height: 32px; }
-  .btn-sm { min-height: 32px; }
-  .tab { min-height: 34px; }
-
-  /* Restore number input spinners for desktop precision */
-  .field input[type="number"]::-webkit-inner-spin-button,
-  .field input[type="number"]::-webkit-outer-spin-button {
-    opacity: 1;
-  }
-}
-
-/* ── Touch device enhancements ── */
-@media (pointer: coarse) {
-  /* Larger tap targets on touch */
-  .pill { min-height: 44px; }
-  .btn { min-height: 48px; }
-
-  /* More generous tap zone on close/small buttons */
-  .btn-sm { min-height: 40px; }
-
-  /* Number spinners interfere with touch — hide */
-  .field input[type="number"]::-webkit-inner-spin-button,
-  .field input[type="number"]::-webkit-outer-spin-button {
-    display: none;
-  }
-}
-
-/* ── Reduced motion — respect iOS/Windows accessibility settings ── */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-  .bar-fill { transition: none; }
-}
+/* ─── Responsive helpers ──────────────────────────────────────── */
+@media (min-width: 768px) { .mobile-only { display: none !important; } }
+@media (max-width: 767px) { .desktop-only { display: none !important; } }

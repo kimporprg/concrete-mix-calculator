@@ -1,46 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-
-    <!--
-      viewport-fit=cover — let content reach iPhone notch/home-bar edges.
-      user-scalable=no   — prevent pinch-zoom breaking the layout on iOS.
-      interactive-widget=resizes-content — stops iOS keyboard from obscuring inputs.
-    -->
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, interactive-widget=resizes-content"
-    />
-
-    <!-- ── iOS / Safari PWA ── -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="MixDesign" />
-    <link rel="apple-touch-icon" href="./icon-192.png" />
-    <!-- Splash for common iPhone/iPad sizes -->
-    <link rel="apple-touch-startup-image" href="./icon-512.png" />
-
-    <!-- ── Android / Chrome PWA ── -->
-    <meta name="theme-color" content="#0D1117" />
-    <meta name="theme-color" content="#0D1117" media="(prefers-color-scheme: dark)" />
-    <link rel="manifest" href="./manifest.json" />
-
-    <!-- ── Windows 11 / Edge ── -->
-    <!-- Tile colour for "Pin to Start" -->
-    <meta name="msapplication-TileColor" content="#0D1117" />
-    <meta name="msapplication-TileImage" content="./icon-192.png" />
-    <!-- Disable Edge phone-number detection — avoids layout shifts -->
-    <meta name="format-detection" content="telephone=no" />
-
-    <!-- ── General SEO / sharing ── -->
-    <meta name="description" content="ACI 211.1 concrete mix design calculator — 10-step absolute volume method, moisture corrections, and quantity estimator." />
-    <meta name="color-scheme" content="dark" />
-
-    <title>MixDesign — ACI 211.1</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0F2027" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MixDesign" />
+  <link rel="manifest" href="/concrete-mix-calculator/manifest.json" />
+  <link rel="apple-touch-icon" href="/concrete-mix-calculator/icon-192.png" />
+  <title>MixDesign — ACI 211.1</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
 </html>

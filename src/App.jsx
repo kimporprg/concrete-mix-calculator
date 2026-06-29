@@ -1,228 +1,229 @@
-// App.jsx — KEY CHANGES ONLY (replace your existing App.jsx with this)
-// Changes vs previous version:
-//   1. InputPanel tab now has two sub-tabs: INPUTS | LIBRARY (n)
-//   2. Save to Library stores BOTH inputs AND result object
-//   3. LibraryPanel receives onLoad which restores inputs AND result
-//   4. ResultsPanel now receives onSaveToLibrary callback
-//   5. GuideTab is available from ResultsPanel's tab bar (no changes needed in App.jsx for that)
-
-import { useState }          from 'react'
-import { useLocalStorage }   from './hooks/useLocalStorage'
+// App.jsx
+import { useState }       from 'react'
+import { useLocalStorage } from './hooks/useLocalStorage'
 import { designMix, DEFAULT_INPUTS } from './lib/aci211'
 import InputPanel   from './components/InputPanel'
 import ResultsPanel from './components/ResultsPanel'
 import LibraryPanel from './components/LibraryPanel'
+import GuideTab     from './components/GuideTab'
+
+const LEFT_TABS = [
+  { id: 'inputs',  label: 'Inputs'  },
+  { id: 'library', label: 'Library' },
+  { id: 'guide',   label: '📖 Guide' },
+]
 
 export default function App() {
-  const [inputs, setInputs]   = useLocalStorage('mixdesign-inputs', DEFAULT_INPUTS)
-  const [result, setResult]   = useState(null)
+  const [inputs, setInputs]   = useLocalStorage('mixdesign-inputs',  DEFAULT_INPUTS)
   const [library, setLibrary] = useLocalStorage('mixdesign-library', [])
-
-  // ── Left-panel sub-tab (mobile: bottom nav tab 0 has two sub-tabs)
-  const [leftTab, setLeftTab] = useState('inputs') // 'inputs' | 'library'
+  const [result,  setResult]  = useState(null)
+  const [leftTab, setLeftTab] = useState('inputs')
+  const [mobileView, setMobileView] = useState('left') // 'left' | 'results'
 
   function handleCalculate() {
     const r = designMix(inputs)
     setResult(r)
+    setMobileView('results')
   }
 
-  // Save current inputs + result to library
-  function handleSaveToLibrary() {
+  function handleSave() {
     if (!result) return
     const entry = {
       id: Date.now().toString(),
       savedAt: new Date().toISOString(),
       inp: { ...inputs },
-      result: result,
+      result,
     }
     setLibrary(prev => [entry, ...prev])
+    setLeftTab('library')
   }
 
-  // Load entry from library — restores inputs AND recalculates result
-  function handleLoadFromLibrary(entry) {
+  function handleLoad(entry) {
     setInputs(entry.inp)
-    // Recalculate from stored inputs to get a fresh result
     const r = designMix(entry.inp)
     setResult(r)
-    // Switch to inputs/results view on mobile
     setLeftTab('inputs')
+    setMobileView('results')
   }
 
   const libCount = library.length
 
-  // ─────────────────────────────────────────────
-  // DESKTOP LAYOUT (≥768px)
-  // ─────────────────────────────────────────────
+  // ── Credit block (shared between desktop/mobile) ──────────────────────
+  const Credits = ({ small }) => (
+    <div style={{
+      fontSize: small ? 9 : 10,
+      color: 'var(--mid)',
+      lineHeight: 1.6,
+      marginTop: small ? 4 : 6,
+    }}>
+      <span style={{ color: 'var(--muted)', fontWeight: 600 }}>By </span>
+      Lyhour Oem &amp; Kimpor Kang
+      <br />
+      <span style={{ color: '#3A5F78', fontSize: small ? 8 : 9 }}>Singbuild Construction Co., Ltd.</span>
+    </div>
+  )
+
+  // ── Left panel tab bar ────────────────────────────────────────────────
+  function LeftTabBar() {
+    return (
+      <div style={{
+        display: 'flex', gap: 2,
+        paddingBottom: 0,
+      }}>
+        {LEFT_TABS.map(t => {
+          const lbl = t.id === 'library' && libCount > 0
+            ? `Library (${libCount})`
+            : t.label
+          return (
+            <button
+              key={t.id}
+              onClick={() => setLeftTab(t.id)}
+              style={{
+                flex: 1, padding: '9px 4px',
+                border: 'none', background: 'transparent',
+                fontFamily: 'inherit', fontSize: 11, fontWeight: 700,
+                cursor: 'pointer', letterSpacing: '0.3px',
+                color: leftTab === t.id ? 'var(--accent)' : 'var(--muted)',
+                borderBottom: leftTab === t.id
+                  ? '2px solid var(--accent)'
+                  : '2px solid transparent',
+                transition: 'color .15s, border-color .15s',
+                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                touchAction: 'manipulation',
+                minHeight: 40,
+              }}
+            >
+              {lbl}
+            </button>
+          )
+        })}
+      </div>
+    )
+  }
+
+  // ── Left panel body ───────────────────────────────────────────────────
+  function LeftBody() {
+    if (leftTab === 'inputs')  return <InputPanel inputs={inputs} setInputs={setInputs} onCalculate={handleCalculate} />
+    if (leftTab === 'library') return <LibraryPanel onLoad={handleLoad} />
+    if (leftTab === 'guide')   return <GuideTab />
+    return null
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  // DESKTOP (≥ 768px)
+  // ─────────────────────────────────────────────────────────────────────
   return (
     <>
-      <style>{`
-        @media (min-width: 768px) { .mobile-only { display: none !important; } }
-        @media (max-width: 767px)  { .desktop-only { display: none !important; } }
-      `}</style>
-
       {/* ── DESKTOP ── */}
       <div className="desktop-only" style={{
         display: 'grid', gridTemplateColumns: '340px 1fr',
         height: '100dvh', background: 'var(--ink)', overflow: 'hidden',
       }}>
-        {/* Left sidebar */}
+        {/* Sidebar */}
         <div style={{
           background: 'var(--ink2)',
           display: 'flex', flexDirection: 'column',
           height: '100dvh', overflow: 'hidden',
+          borderRight: '1px solid var(--line)',
         }}>
-          {/* Sidebar header */}
+          {/* Sidebar header + credits */}
           <div style={{
-            padding: 'calc(12px + env(safe-area-inset-top)) 16px 0',
+            padding: 'calc(14px + var(--sat)) 18px 0',
             flexShrink: 0,
           }}>
-            <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--white)', letterSpacing: '-0.3px' }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--white)', letterSpacing: '-0.5px' }}>
               MixDesign
             </div>
-            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--accent)', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 12 }}>
+            <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent)', letterSpacing: '2px', textTransform: 'uppercase' }}>
               ACI 211.1 CALCULATOR
             </div>
+            <Credits small={false} />
+            <div style={{ marginTop: 14 }}>
+              <LeftTabBar />
+            </div>
+          </div>
 
-            {/* INPUTS / LIBRARY sub-tabs */}
-            <div style={{ display: 'flex', gap: 2, marginBottom: 0 }}>
-              {['inputs', 'library'].map(t => (
-                <button
-                  key={t}
-                  onClick={() => setLeftTab(t)}
+          {/* Scrollable body */}
+          <div style={{
+            flex: 1, overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            padding: '14px 18px calc(16px + var(--sab))',
+          }}>
+            <LeftBody />
+          </div>
+        </div>
+
+        {/* Results panel */}
+        <div style={{
+          height: '100dvh', display: 'flex', flexDirection: 'column',
+          overflow: 'hidden', background: 'var(--ink)',
+          padding: '16px 20px calc(16px + var(--sab)) 20px',
+        }}>
+          <ResultsPanel result={result} onSave={handleSave} />
+        </div>
+      </div>
+
+      {/* ── MOBILE ── */}
+      <div className="mobile-only" style={{
+        display: 'flex', flexDirection: 'column',
+        height: '100dvh', background: 'var(--ink)', overflow: 'hidden',
+      }}>
+        {/* Mobile header */}
+        <div style={{
+          background: 'var(--ink2)',
+          flexShrink: 0,
+          paddingTop: 'calc(10px + var(--sat))',
+          borderBottom: '1px solid var(--line)',
+        }}>
+          <div style={{ padding: '0 16px 10px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--white)', letterSpacing: '-0.3px' }}>
+                MixDesign
+              </div>
+              <div style={{ fontSize: 8, fontWeight: 700, color: 'var(--accent)', letterSpacing: '2px', textTransform: 'uppercase' }}>
+                ACI 211.1 CALCULATOR
+              </div>
+              <Credits small={true} />
+            </div>
+            {/* Mobile view toggle */}
+            <div style={{ display: 'flex', gap: 4 }}>
+              {[['left','Inputs'],['results','Results']].map(([v,l]) => (
+                <button key={v} onClick={() => setMobileView(v)}
                   style={{
-                    flex: 1, padding: '8px 0',
-                    border: 'none', borderRadius: '6px 6px 0 0',
-                    fontSize: 11, fontWeight: 700, cursor: 'pointer',
-                    fontFamily: 'inherit', letterSpacing: '0.5px', textTransform: 'uppercase',
-                    background: leftTab === t ? 'var(--ink)' : 'transparent',
-                    color: leftTab === t ? 'var(--accent)' : 'var(--muted)',
-                    borderBottom: leftTab === t ? '2px solid var(--accent)' : '2px solid transparent',
-                  }}
-                >
-                  {t === 'library' ? `Library${libCount > 0 ? ` (${libCount})` : ''}` : 'Inputs'}
+                    padding: '7px 12px', border: 'none', borderRadius: 7,
+                    fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
+                    background: mobileView === v ? 'var(--accent)' : 'var(--surface)',
+                    color: mobileView === v ? 'var(--white)' : 'var(--muted)',
+                    minHeight: 36, touchAction: 'manipulation',
+                  }}>
+                  {l}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Sidebar content */}
-          <div style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch', padding: '12px 16px 16px' }}>
-            {leftTab === 'inputs'
-              ? <InputPanel inputs={inputs} setInputs={setInputs} onCalculate={handleCalculate} />
-              : <LibraryPanel onLoad={handleLoadFromLibrary} />
-            }
-          </div>
+          {/* Left sub-tabs only when on left view */}
+          {mobileView === 'left' && (
+            <div style={{ padding: '0 16px' }}>
+              <LeftTabBar />
+            </div>
+          )}
         </div>
 
-        {/* Right — Results */}
+        {/* Scrollable content */}
         <div style={{
-          height: '100dvh', overflowY: 'auto', WebkitOverflowScrolling: 'touch',
-          padding: '16px 20px', background: 'var(--ink)',
+          flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch',
+          padding: '14px 16px',
         }}>
-          <ResultsPanel result={result} onSaveToLibrary={handleSaveToLibrary} />
+          {mobileView === 'left'
+            ? <LeftBody />
+            : <ResultsPanel result={result} onSave={handleSave} />
+          }
         </div>
-      </div>
 
-      {/* ── MOBILE ── */}
-      <MobileLayout
-        inputs={inputs} setInputs={setInputs}
-        result={result}
-        leftTab={leftTab} setLeftTab={setLeftTab}
-        libCount={libCount}
-        onCalculate={handleCalculate}
-        onSaveToLibrary={handleSaveToLibrary}
-        onLoadFromLibrary={handleLoadFromLibrary}
-      />
+        {/* iOS home-bar spacer */}
+        <div style={{ height: 'var(--sab)', background: 'var(--ink2)', flexShrink: 0 }} />
+      </div>
     </>
-  )
-}
-
-// ─────────────────────────────────────────────
-// MOBILE LAYOUT (<768px)
-// ─────────────────────────────────────────────
-function MobileLayout({ inputs, setInputs, result, leftTab, setLeftTab, libCount, onCalculate, onSaveToLibrary, onLoadFromLibrary }) {
-  // Bottom nav: 0 = Inputs/Library, 1 = Results
-  const [bottomNav, setBottomNav] = useState(0)
-
-  return (
-    <div className="mobile-only" style={{
-      display: 'flex', flexDirection: 'column',
-      height: '100dvh', background: 'var(--ink)', overflow: 'hidden',
-    }}>
-      {/* Header */}
-      <div style={{
-        background: 'var(--ink2)', flexShrink: 0,
-        padding: 'calc(12px + env(safe-area-inset-top)) 16px 0',
-      }}>
-        <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--white)', marginBottom: 2 }}>
-          MixDesign
-        </div>
-        <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent)', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 8 }}>
-          ACI 211.1 CALCULATOR
-        </div>
-
-        {/* Sub-tabs for left panel (only shown when bottomNav === 0) */}
-        {bottomNav === 0 && (
-          <div style={{ display: 'flex', gap: 2 }}>
-            {['inputs', 'library'].map(t => (
-              <button
-                key={t}
-                onClick={() => setLeftTab(t)}
-                style={{
-                  flex: 1, padding: '7px 0',
-                  border: 'none', borderRadius: '6px 6px 0 0',
-                  fontSize: 11, fontWeight: 700, cursor: 'pointer',
-                  fontFamily: 'inherit', letterSpacing: '0.5px', textTransform: 'uppercase',
-                  background: leftTab === t ? 'var(--ink)' : 'transparent',
-                  color: leftTab === t ? 'var(--accent)' : 'var(--muted)',
-                  borderBottom: leftTab === t ? '2px solid var(--accent)' : '2px solid transparent',
-                }}
-              >
-                {t === 'library' ? `Library${libCount > 0 ? ` (${libCount})` : ''}` : 'Inputs'}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Scrollable content area */}
-      <div style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch', padding: '12px 16px' }}>
-        {bottomNav === 0
-          ? (leftTab === 'inputs'
-              ? <InputPanel inputs={inputs} setInputs={setInputs} onCalculate={() => { onCalculate(); setBottomNav(1) }} />
-              : <LibraryPanel onLoad={entry => { onLoadFromLibrary(entry); setBottomNav(1) }} />
-            )
-          : <ResultsPanel result={result} onSaveToLibrary={onSaveToLibrary} />
-        }
-      </div>
-
-      {/* Bottom nav */}
-      <div style={{
-        background: 'var(--ink2)', flexShrink: 0,
-        display: 'flex',
-        paddingBottom: 'env(safe-area-inset-bottom)',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-      }}>
-        {[
-          { label: 'Inputs', idx: 0 },
-          { label: 'Results', idx: 1 },
-        ].map(nav => (
-          <button
-            key={nav.idx}
-            onClick={() => setBottomNav(nav.idx)}
-            style={{
-              flex: 1, padding: '12px 0',
-              border: 'none', background: 'transparent',
-              fontSize: 12, fontWeight: 700, cursor: 'pointer',
-              fontFamily: 'inherit',
-              color: bottomNav === nav.idx ? 'var(--accent)' : 'var(--muted)',
-              borderTop: bottomNav === nav.idx ? '2px solid var(--accent)' : '2px solid transparent',
-            }}
-          >
-            {nav.label}
-          </button>
-        ))}
-      </div>
-    </div>
   )
 }
