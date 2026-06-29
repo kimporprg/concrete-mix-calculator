@@ -21,7 +21,6 @@ export default function ResultsPanel({ result, onSave }) {
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         justifyContent: 'center', height: '100%', padding: 40, textAlign: 'center',
       }}>
-        <div style={{ fontSize: 52, marginBottom: 18 }}>🧱</div>
         <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--white)', marginBottom: 8 }}>
           No results yet
         </div>

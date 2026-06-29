@@ -2,7 +2,7 @@
 
 const SECTIONS = [
   {
-    id: 'project', color: 'var(--muted)', title: '📋 Project Information',
+    id: 'project', color: 'var(--muted)', title: 'Project Information',
     items: [
       { sym: 'Name',   name: 'Project Name',
         body: 'A label for the project. Appears in the CSV export header. Use something descriptive like "Block A — Ground Slab" so you can identify the file later.' },
@@ -13,7 +13,7 @@ const SECTIONS = [
     ],
   },
   {
-    id: 'strength', color: 'var(--accent)', title: "💪 Strength & Design",
+    id: 'strength', color: 'var(--accent)', title: "Strength & Design",
     items: [
       { sym: "f'c", name: 'Specified Compressive Strength',
         body: "The strength your concrete must meet, written on the structural drawings. M25 = f'c 25 MPa. Tapping a Grade button sets this automatically.",
@@ -30,15 +30,15 @@ const SECTIONS = [
     ],
   },
   {
-    id: 'workability', color: '#1D7A4F', title: '🌊 Workability & Aggregate',
+    id: 'workability', color: '#1D7A4F', title: 'Workability & Aggregate',
     items: [
       { sym: 'Slump', name: 'Target Slump Range',
         body: 'How fluid the fresh concrete is — more slump needs more water, which raises W/C and reduces strength. Drives the mixing water lookup in ACI Table 6.3.3.',
         extra: { label: 'Options',
-          text: '25–50 mm → stiff, pavements\n75–100 mm → standard reinforced concrete ✓\n100–150 mm → congested steel, pump mixes\n150–175 mm → very fluid (better to use a plasticiser)' } },
+          text: '25–50 mm → stiff, pavements\n75–100 mm → standard reinforced concrete (recommended)\n100–150 mm → congested steel, pump mixes\n150–175 mm → very fluid (better to use a plasticiser)' } },
       { sym: 'MAS',  name: 'Max. Aggregate Size',
         body: 'Largest coarse particle size. Larger aggregate needs less water for the same slump (less surface area to coat), reducing cement. Limited by rebar spacing.',
-        extra: { label: 'Common', text: '10 mm thin/congested · 19 mm general use ✓ · 25–37.5 mm mass concrete' } },
+        extra: { label: 'Common', text: '10 mm thin/congested · 19 mm general use (recommended) · 25–37.5 mm mass concrete' } },
       { sym: 'Cem.', name: 'Cement Type',
         body: 'Identifies the binder. Informational only — label appears in the export but does not change any ACI number.',
         extra: { label: 'Options',
@@ -49,7 +49,7 @@ const SECTIONS = [
     ],
   },
   {
-    id: 'cement-fa', color: 'var(--warn)', title: '🏭 Cement & Fine Aggregate (Sand)',
+    id: 'cement-fa', color: 'var(--warn)', title: 'Cement & Fine Aggregate (Sand)',
     items: [
       { sym: 'Gc',  name: 'Specific Gravity of Cement',
         body: 'How dense cement is compared to water (water = 1.0). OPC is ~3.15× denser. Used in Step 6 to convert cement mass to volume.',
@@ -59,7 +59,7 @@ const SECTIONS = [
         extra: { label: 'Typical', text: '2.60–2.70 for river sand. From your lab report (ASTM C128).' } },
       { sym: 'FM',  name: 'Fineness Modulus of Sand',
         body: 'One number that describes how coarse or fine your sand is overall, from a sieve analysis. Higher FM = coarser sand. Controls the ACI Table 6.3.6 CA fraction lookup.',
-        extra: { label: 'Range', text: '2.3 very fine → 2.6–2.8 typical river sand → 3.1 coarse\n⚠️ Wrong FM shifts CA content by 30–50 kg/m³.' } },
+        extra: { label: 'Range', text: '2.3 very fine → 2.6–2.8 typical river sand → 3.1 coarse\nNote: wrong FM shifts CA content by 30–50 kg/m³.' } },
       { sym: 'MC fa',  name: 'FA Moisture Content (%)',
         body: 'Free surface water on the sand right now, as % of dry mass. The app adds this weight to the sand batch mass and removes it from added water — so W/C stays correct.',
         extra: { label: 'Important', text: 'Measure on the day of casting. Changes with weather. Typical stockpile: 1–5%.' } },
@@ -69,7 +69,7 @@ const SECTIONS = [
     ],
   },
   {
-    id: 'ca', color: 'var(--muted)', title: '🪨 Coarse Aggregate',
+    id: 'ca', color: 'var(--muted)', title: 'Coarse Aggregate',
     items: [
       { sym: 'Gca',  name: 'Specific Gravity of Coarse Agg.',
         body: 'Density of your crushed stone or gravel relative to water. Used in Step 7 to convert CA mass to absolute volume.',
@@ -86,7 +86,7 @@ const SECTIONS = [
     ],
   },
   {
-    id: 'outputs', color: 'var(--accent)', title: '📊 Output Values',
+    id: 'outputs', color: 'var(--accent)', title: 'Output Values',
     items: [
       { sym: "f'cr",    name: 'Required Average Strength',
         body: "Always higher than f'c. The entire design is built to hit this. Higher f'cr = more cement = higher cost." },
@@ -113,7 +113,7 @@ const SECTIONS = [
     ],
   },
   {
-    id: 'warnings', color: 'var(--warn)', title: '⚠️ Compliance Warnings',
+    id: 'warnings', color: 'var(--warn)', title: 'Compliance Warnings',
     items: [
       { sym: 'W/C>0.60', name: 'W/C Too High',
         body: 'Durability suffers — paste is too porous. Fix: reduce slump, increase aggregate size, or add a water-reducing plasticiser (10–15% water saving at same slump).' },

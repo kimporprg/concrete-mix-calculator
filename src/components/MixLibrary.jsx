@@ -70,7 +70,6 @@ export default function MixLibrary({ library, deleteMix, clearAll, onLoad }) {
         textAlign: 'center', padding: '40px 20px',
         color: 'var(--text-3)', fontSize: 13,
       }}>
-        <div style={{ fontSize: 32, marginBottom: 12 }}>📋</div>
         No saved mixes yet. After designing a mix, click <strong style={{ color: 'var(--text-2)' }}>Save to Library</strong> to store it here.
       </div>
     )

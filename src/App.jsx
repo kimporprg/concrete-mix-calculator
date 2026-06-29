@@ -10,7 +10,7 @@ import GuideTab     from './components/GuideTab'
 const LEFT_TABS = [
   { id: 'inputs',  label: 'Inputs'  },
   { id: 'library', label: 'Library' },
-  { id: 'guide',   label: '📖 Guide' },
+  { id: 'guide',   label: 'Guide' },
 ]
 
 export default function App() {
@@ -48,21 +48,6 @@ export default function App() {
 
   const libCount = library.length
 
-  // ── Credit block (shared between desktop/mobile) ──────────────────────
-  const Credits = ({ small }) => (
-    <div style={{
-      fontSize: small ? 9 : 10,
-      color: 'var(--mid)',
-      lineHeight: 1.6,
-      marginTop: small ? 4 : 6,
-    }}>
-      <span style={{ color: 'var(--muted)', fontWeight: 600 }}>By </span>
-      Lyhour Oem &amp; Kimpor Kang
-      <br />
-      <span style={{ color: '#3A5F78', fontSize: small ? 8 : 9 }}>Singbuild Construction Co., Ltd.</span>
-    </div>
-  )
-
   // ── Left panel tab bar ────────────────────────────────────────────────
   function LeftTabBar() {
     return (
@@ -81,7 +66,7 @@ export default function App() {
               style={{
                 flex: 1, padding: '9px 4px',
                 border: 'none', background: 'transparent',
-                fontFamily: 'inherit', fontSize: 11, fontWeight: 700,
+                fontFamily: 'inherit', fontSize: 13, fontWeight: 700,
                 cursor: 'pointer', letterSpacing: '0.3px',
                 color: leftTab === t.id ? 'var(--accent)' : 'var(--muted)',
                 borderBottom: leftTab === t.id
@@ -132,12 +117,11 @@ export default function App() {
             flexShrink: 0,
           }}>
             <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--white)', letterSpacing: '-0.5px' }}>
-              MixDesign
+              Concrete Design Calculator
             </div>
             <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent)', letterSpacing: '2px', textTransform: 'uppercase' }}>
               ACI 211.1 CALCULATOR
             </div>
-            <Credits small={false} />
             <div style={{ marginTop: 14 }}>
               <LeftTabBar />
             </div>
@@ -178,12 +162,11 @@ export default function App() {
           <div style={{ padding: '0 16px 10px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
             <div>
               <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--white)', letterSpacing: '-0.3px' }}>
-                MixDesign
+                Concrete Design Calculator
               </div>
               <div style={{ fontSize: 8, fontWeight: 700, color: 'var(--accent)', letterSpacing: '2px', textTransform: 'uppercase' }}>
                 ACI 211.1 CALCULATOR
               </div>
-              <Credits small={true} />
             </div>
             {/* Mobile view toggle */}
             <div style={{ display: 'flex', gap: 4 }}>

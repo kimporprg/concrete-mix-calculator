@@ -10,7 +10,6 @@ export default function LibraryPanel({ onLoad }) {
   if (library.length === 0) {
     return (
       <div style={{ padding: '40px 16px', textAlign: 'center' }}>
-        <div style={{ fontSize: 36, marginBottom: 14 }}>📚</div>
         <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--white)', marginBottom: 6 }}>No saved mixes yet</div>
         <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>
           Calculate a mix and tap <span style={{ color: 'var(--accent)', fontWeight: 700 }}>Save to Library</span> to store it here.
