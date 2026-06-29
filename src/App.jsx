@@ -119,8 +119,8 @@ export default function App() {
             <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--white)', letterSpacing: '-0.5px' }}>
               Concrete Design Calculator
             </div>
-            <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent)', letterSpacing: '2px', textTransform: 'uppercase' }}>
-              ACI 211.1 CALCULATOR
+            <div style={{ fontSize: 10, color: 'var(--mid)', marginTop: 4 }}>
+              By Lyhour Oem &amp; Kimpor Kang
             </div>
             <div style={{ marginTop: 14 }}>
               <LeftTabBar />
@@ -164,8 +164,8 @@ export default function App() {
               <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--white)', letterSpacing: '-0.3px' }}>
                 Concrete Design Calculator
               </div>
-              <div style={{ fontSize: 8, fontWeight: 700, color: 'var(--accent)', letterSpacing: '2px', textTransform: 'uppercase' }}>
-                ACI 211.1 CALCULATOR
+              <div style={{ fontSize: 9, color: 'var(--mid)', marginTop: 2 }}>
+                By Lyhour Oem &amp; Kimpor Kang
               </div>
             </div>
             {/* Mobile view toggle */}
