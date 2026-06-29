@@ -14,17 +14,17 @@ export default class ErrorBoundary extends Component {
     if (this.state.error) {
       return (
         <div style={{
-          padding: 32, fontFamily: 'var(--font)', color: 'var(--text)',
-          background: 'var(--bg)', minHeight: '100dvh',
+          padding: 32, fontFamily: 'var(--font-body)', color: 'var(--white)',
+          background: 'var(--ink)', minHeight: '100dvh',
           display: 'flex', flexDirection: 'column', gap: 16,
         }}>
           <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--danger)' }}>
             Something went wrong
           </div>
           <div style={{
-            background: 'var(--surface)', border: '1px solid var(--danger)',
+            background: 'var(--ink2)', border: '1px solid var(--danger)',
             borderRadius: 8, padding: 16,
-            fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--text-2)',
+            fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--muted)',
             whiteSpace: 'pre-wrap', wordBreak: 'break-all',
           }}>
             {this.state.error?.message}

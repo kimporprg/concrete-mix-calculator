@@ -68,9 +68,9 @@ export default function MixLibrary({ library, deleteMix, clearAll, onLoad }) {
     return (
       <div style={{
         textAlign: 'center', padding: '40px 20px',
-        color: 'var(--text-3)', fontSize: 13,
+        color: 'var(--mid)', fontSize: 13,
       }}>
-        No saved mixes yet. After designing a mix, click <strong style={{ color: 'var(--text-2)' }}>Save to Library</strong> to store it here.
+        No saved mixes yet. After designing a mix, click <strong style={{ color: 'var(--muted)' }}>Save to Library</strong> to store it here.
       </div>
     )
   }
@@ -87,8 +87,8 @@ export default function MixLibrary({ library, deleteMix, clearAll, onLoad }) {
         <div key={m.id} className="card" style={{ padding: '14px 16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
             <div>
-              <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 2 }}>{m.name}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-3)' }}>
+              <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--white)', marginBottom: 2 }}>{m.name}</div>
+              <div style={{ fontSize: 11, color: 'var(--mid)' }}>
                 {new Date(m.savedAt).toLocaleDateString()} · {m.placement}
               </div>
             </div>
@@ -106,8 +106,8 @@ export default function MixLibrary({ library, deleteMix, clearAll, onLoad }) {
               { label: "f'cr",    val: `${m.fcr.toFixed(1)} MPa` },
             ].map(x => (
               <div key={x.label} style={{ display: 'flex', gap: 4, alignItems: 'baseline' }}>
-                <span style={{ fontSize: 10, color: 'var(--text-3)', fontWeight: 700, textTransform: 'uppercase' }}>{x.label}</span>
-                <span style={{ fontSize: 13, fontFamily: 'var(--mono)', color: 'var(--text)' }}>{x.val}</span>
+                <span style={{ fontSize: 10, color: 'var(--mid)', fontWeight: 700, textTransform: 'uppercase' }}>{x.label}</span>
+                <span style={{ fontSize: 13, fontFamily: 'var(--font-mono)', color: 'var(--white)' }}>{x.val}</span>
               </div>
             ))}
           </div>

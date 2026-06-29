@@ -30,7 +30,7 @@ const SECTIONS = [
     ],
   },
   {
-    id: 'workability', color: '#C0C0C0', title: 'Workability & Aggregate',
+    id: 'workability', color: '#1E8E5A', title: 'Workability & Aggregate',
     items: [
       { sym: 'Slump', name: 'Target Slump Range',
         body: 'How fluid the fresh concrete is — more slump needs more water, which raises W/C and reduces strength. Drives the mixing water lookup in ACI Table 6.3.3.',
@@ -172,18 +172,18 @@ export default function GuideTab() {
 function FieldCard({ item, color }) {
   return (
     <div style={{
-      background: 'var(--surface)', borderRadius: 8,
+      background: 'var(--ink2)', borderRadius: 8,
       border: '1px solid var(--line)', marginBottom: 8, overflow: 'hidden',
     }}>
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '9px 14px',
         borderBottom: item.body || item.extra ? '1px solid var(--line)' : 'none',
-        background: 'rgba(255,255,255,0.03)',
+        background: 'var(--steel)',
       }}>
         <span style={{
           fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700,
-          background: color, color: 'var(--ink)',
+          background: color, color: '#FFFFFF',
           padding: '2px 7px', borderRadius: 4, whiteSpace: 'nowrap', flexShrink: 0,
         }}>
           {item.sym}
@@ -202,7 +202,7 @@ function FieldCard({ item, color }) {
           )}
           {item.extra && (
             <div style={{
-              marginTop: 8, background: 'rgba(0,0,0,0.3)',
+              marginTop: 8, background: 'var(--steel)',
               borderRadius: 6, padding: '7px 10px',
               borderLeft: `2px solid ${color}`,
             }}>
@@ -212,7 +212,7 @@ function FieldCard({ item, color }) {
               <div style={{
                 fontSize: 12, lineHeight: 1.6, whiteSpace: 'pre-wrap',
                 fontFamily: item.extra.mono ? 'var(--font-mono)' : 'inherit',
-                color: item.extra.mono ? '#D0D0D0' : 'var(--line)',
+                color: 'var(--muted)',
               }}>
                 {item.extra.text}
               </div>

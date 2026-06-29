@@ -95,7 +95,7 @@ function LibCard({ entry, onLoad, onDelete }) {
       <div style={{
         display: 'grid', gridTemplateColumns: '1fr 1fr',
         gap: '8px 12px', margin: '0 14px 10px',
-        background: 'rgba(0,0,0,0.2)', borderRadius: 8, padding: '10px 12px',
+        background: 'var(--steel)', borderRadius: 8, padding: '10px 12px',
       }}>
         <MatBlock
           label="Water" accent="var(--accent)"
@@ -139,7 +139,7 @@ function Stat({ label, value }) {
       <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.5px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 2 }}>
         {label}
       </div>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: 'var(--line)' }}>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: 'var(--white)' }}>
         {value}
       </div>
     </div>
