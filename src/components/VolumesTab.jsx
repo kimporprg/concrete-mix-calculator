@@ -46,7 +46,7 @@ export default function VolumesTab({ result: r }) {
 
       {/* Volume table */}
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}>
           <table className="step-table" style={{ minWidth: 300 }}>
             <thead>
               <tr>

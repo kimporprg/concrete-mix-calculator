@@ -150,7 +150,7 @@ ${r.admixture !== 'none' ? `<p style="font-size:11px;color:#555;">Admixture: ${r
 
       {/* SSD vs Field table */}
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}>
           <table className="step-table" style={{ minWidth: 340 }}>
             <thead>
               <tr>

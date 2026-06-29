@@ -39,7 +39,7 @@ export default function InputPanel({ inputs, setInputs, onCalculate }) {
             <button
               key={u}
               className={`pill ${inputs.unitSystem === u ? 'active' : ''}`}
-              style={{ fontSize: 12, minHeight: 32, padding: '0 12px' }}
+              style={{ fontSize: 12, minHeight: 36, padding: '0 12px' }}
               onClick={() => set('unitSystem', u)}
             >
               {u === 'metric' ? 'SI (kg/m³)' : 'Imperial (lb/yd³)'}
@@ -397,7 +397,7 @@ export default function InputPanel({ inputs, setInputs, onCalculate }) {
       <button
         className="btn btn-primary btn-full"
         onClick={onCalculate}
-        style={{ fontSize: 15, minHeight: 50 }}
+        style={{ fontSize: 16, minHeight: 52 }}
       >
         Design Mix
       </button>

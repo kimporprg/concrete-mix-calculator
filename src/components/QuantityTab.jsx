@@ -186,7 +186,7 @@ export default function QuantityTab({ result, inputs }) {
               Clear All
             </button>
           </div>
-          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}>
             <table className="step-table" style={{ minWidth: 460 }}>
               <thead>
                 <tr>

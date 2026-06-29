@@ -70,7 +70,7 @@ export default function StepsTab({ result: r, isImperial }) {
 
   return (
     <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-      <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+      <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}>
         <table className="step-table" style={{ minWidth: 520 }}>
           <thead>
             <tr>

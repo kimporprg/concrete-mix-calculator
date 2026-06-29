@@ -24,7 +24,7 @@
 
   /* System sans-serif — SF Pro on Apple, Segoe UI on Windows, Roboto on Android */
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, 'Courier New', monospace;
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Cascadia Mono', Consolas, Menlo, 'Courier New', monospace;
 
   --r-xs:  4px;
   --r-sm:  8px;
@@ -38,12 +38,17 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  /* Improve touch responsiveness on iOS */
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
   height: 100%;
-  /* Prevent iOS font size zoom on input focus */
+  /* Prevent iOS font size zoom on input focus — critical for iPhone */
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Smooth scroll on iOS */
+  scroll-behavior: smooth;
 }
 
 body, #root {
@@ -55,12 +60,18 @@ body, #root {
   -moz-osx-font-smoothing: grayscale;
   /* Prevent horizontal scroll at root level */
   overflow-x: hidden;
+  /* Prevent iOS overscroll bounce on body */
+  overscroll-behavior: none;
 }
 
-/* ── Scrollbars (WebKit) ── */
-::-webkit-scrollbar { width: 6px; }
+/* ── Scrollbars — WebKit (macOS/iOS Safari, Chrome) ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 3px; }
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* Windows 11 scrollbar (thin overlay style) */
+* { scrollbar-width: thin; scrollbar-color: var(--border-hi) transparent; }
 
 /* ── Buttons ── */
 .btn {
@@ -68,7 +79,7 @@ body, #root {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  /* 44px minimum tap target */
+  /* 44px minimum tap target — Apple HIG + WCAG */
   min-height: 44px;
   padding: 0 18px;
   border-radius: var(--r-md);
@@ -78,19 +89,38 @@ body, #root {
   letter-spacing: -0.01em;
   cursor: pointer;
   border: none;
-  transition: background 0.12s, opacity 0.1s;
-  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s, opacity 0.1s, transform 0.08s;
   white-space: nowrap;
+  /* iOS: remove default UA button styling */
+  -webkit-appearance: none;
+  appearance: none;
+  /* Prevent text selection on double-tap */
+  user-select: none;
+  -webkit-user-select: none;
+  /* Touch action: allow tap but not pan interference */
+  touch-action: manipulation;
 }
-.btn:active { opacity: 0.75; }
+.btn:active {
+  opacity: 0.75;
+  transform: scale(0.97);
+}
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-primary:hover { background: var(--accent-dk); }
+/* Windows high contrast / focus visible */
+.btn-primary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 .btn-ghost {
   background: var(--surface-3);
   color: var(--text-2);
   border: 1px solid var(--border);
 }
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn-ghost:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 .btn-full { width: 100%; }
 .btn-sm { min-height: 36px; padding: 0 14px; font-size: 13px; }
 
@@ -132,11 +162,18 @@ body, #root {
   font-family: var(--font);
   letter-spacing: 0.01em;
   transition: background 0.12s, color 0.12s;
-  -webkit-tap-highlight-color: transparent;
-  white-space: nowrap;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  /* Ensure min 44px touch target including surroundings */
+  min-width: 44px;
 }
 .tab:hover { color: var(--text); }
 .tab.active { background: var(--accent); color: #fff; }
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
 
 /* ── Badges ── */
 .badge {
@@ -180,6 +217,8 @@ body, #root {
   font-family: var(--mono);
   line-height: 1;
   letter-spacing: -0.02em;
+  /* Prevent layout shift when value changes */
+  contain: layout;
 }
 .metric-unit {
   font-size: 11px;
@@ -199,6 +238,10 @@ body, #root {
   letter-spacing: 0.07em;
   white-space: nowrap;
   border-bottom: 1px solid var(--border);
+  /* Sticky headers for long tables on iOS */
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 .step-table td {
   padding: 10px 11px;
@@ -250,24 +293,42 @@ body, #root {
 .field input,
 .field select {
   width: 100%;
+  /* 44px minimum for touch — iOS HIG */
   min-height: 44px;
   background: var(--surface-2);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: var(--r-sm);
   padding: 0 12px;
-  font-size: 15px;
+  /* 16px minimum to prevent iOS auto-zoom on focus */
+  font-size: 16px;
   font-family: var(--font);
-  transition: border-color 0.12s;
+  transition: border-color 0.12s, box-shadow 0.12s;
   -webkit-appearance: none;
   appearance: none;
+  /* Remove iOS inner shadow on inputs */
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 .field input:focus,
 .field select:focus {
   outline: none;
   border-color: var(--accent);
+  /* Windows-style focus ring */
+  box-shadow: 0 0 0 2px var(--accent-lt);
 }
 .field input::placeholder { color: var(--text-3); }
+
+/* iOS: style number inputs */
+.field input[type="number"] {
+  -moz-appearance: textfield;
+}
+.field input[type="number"]::-webkit-inner-spin-button,
+.field input[type="number"]::-webkit-outer-spin-button {
+  /* Keep spinners on desktop for precision, hide on mobile */
+  opacity: 0.5;
+}
+
 .field select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%234D5A6A' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -292,10 +353,21 @@ body, #root {
   transition: border-color 0.12s, color 0.12s, background 0.12s;
   display: inline-flex;
   align-items: center;
-  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+  /* Minimum touch target */
+  min-width: 44px;
+  justify-content: center;
 }
 .pill:hover { border-color: var(--accent); color: var(--accent); }
 .pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 /* ── Section label ── */
 .section-label {
@@ -311,7 +383,7 @@ body, #root {
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 
-/* Collapse to 2-col on narrow screens */
+/* Collapse 3-col → 2-col on narrow screens (iPhone SE, mini) */
 @media (max-width: 400px) {
   .grid-3 { grid-template-columns: 1fr 1fr; }
 }
@@ -319,3 +391,46 @@ body, #root {
 /* ── Utility ── */
 .mono { font-family: var(--mono); }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── iOS safe area helpers ── */
+.safe-top    { padding-top:    env(safe-area-inset-top);    }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+/* ── Windows 11 / pointer-based device enhancements ── */
+@media (pointer: fine) {
+  /* Allow tighter spacing with a mouse */
+  .pill { min-height: 32px; }
+  .btn-sm { min-height: 32px; }
+  .tab { min-height: 34px; }
+
+  /* Restore number input spinners for desktop precision */
+  .field input[type="number"]::-webkit-inner-spin-button,
+  .field input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+  }
+}
+
+/* ── Touch device enhancements ── */
+@media (pointer: coarse) {
+  /* Larger tap targets on touch */
+  .pill { min-height: 44px; }
+  .btn { min-height: 48px; }
+
+  /* More generous tap zone on close/small buttons */
+  .btn-sm { min-height: 40px; }
+
+  /* Number spinners interfere with touch — hide */
+  .field input[type="number"]::-webkit-inner-spin-button,
+  .field input[type="number"]::-webkit-outer-spin-button {
+    display: none;
+  }
+}
+
+/* ── Reduced motion — respect iOS/Windows accessibility settings ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .bar-fill { transition: none; }
+}
