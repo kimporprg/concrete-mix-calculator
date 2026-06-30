@@ -19,7 +19,8 @@ export default function App() {
   const [result,  setResult]  = useState(null)
   const [leftTab, setLeftTab] = useState('inputs')
   const [mobileView, setMobileView] = useState('left')
-  const [theme, setTheme]     = useLocalStorage('mixdesign-theme', 'dark')
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  const [theme, setTheme]     = useLocalStorage('mixdesign-theme', systemDark ? 'dark' : 'light')
 
   // Apply theme to document root
   document.documentElement.setAttribute('data-theme', theme === 'light' ? 'light' : '')
