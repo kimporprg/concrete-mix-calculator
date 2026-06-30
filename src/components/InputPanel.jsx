@@ -105,7 +105,7 @@ export default function InputPanel({ inputs, setInputs, onCalculate }) {
 
       {/* ── Cement properties ───────────────────── */}
       <div className="section-label" style={{ marginTop: 18 }}>Cement Properties</div>
-      <Field label="Gc — Specific Gravity of Cement" htmlFor="inp-gcCement">
+      <Field label="Gc - Specific Gravity of Cement" htmlFor="inp-gcCement">
         <input id="inp-gcCement" type="number" className="field-input" value={inp.gcCement}
           onChange={e => num('gcCement', e.target.value)} inputMode="decimal" step="0.01" />
       </Field>
@@ -113,11 +113,11 @@ export default function InputPanel({ inputs, setInputs, onCalculate }) {
       {/* ── Fine Aggregate ───────────────────────── */}
       <div className="section-label" style={{ marginTop: 18 }}>Fine Aggregate (Sand)</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-        <Field label="Gfa — Specific Gravity" htmlFor="inp-gfa">
+        <Field label="Gfa - Specific Gravity" htmlFor="inp-gfa">
           <input id="inp-gfa" type="number" className="field-input" value={inp.gfa}
             onChange={e => num('gfa', e.target.value)} inputMode="decimal" step="0.01" />
         </Field>
-        <Field label="FM — Fineness Modulus" htmlFor="inp-fm">
+        <Field label="FM - Fineness Modulus" htmlFor="inp-fm">
           <input id="inp-fm" type="number" className="field-input" value={inp.fm}
             onChange={e => num('fm', e.target.value)} inputMode="decimal" step="0.01" />
         </Field>
@@ -134,7 +134,7 @@ export default function InputPanel({ inputs, setInputs, onCalculate }) {
       {/* ── Coarse Aggregate ─────────────────────── */}
       <div className="section-label" style={{ marginTop: 18 }}>Coarse Aggregate</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-        <Field label="Gca — Specific Gravity" htmlFor="inp-gca">
+        <Field label="Gca - Specific Gravity" htmlFor="inp-gca">
           <input id="inp-gca" type="number" className="field-input" value={inp.gca}
             onChange={e => num('gca', e.target.value)} inputMode="decimal" step="0.01" />
         </Field>

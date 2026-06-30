@@ -15,7 +15,7 @@ export default function VolumesTab({ result }) {
   return (
     <div>
       <div className="card" style={{ marginBottom: 12 }}>
-        <div className="section-label">Absolute Volume — 1 m³ Breakdown</div>
+        <div className="section-label">Absolute Volume - 1 m³ Breakdown</div>
 
         {/* Stacked bar */}
         <svg viewBox={`0 0 ${W} ${H}`} style={{ width:'100%', borderRadius: 6, overflow:'hidden', marginBottom:12 }}>

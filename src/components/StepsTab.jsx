@@ -7,7 +7,7 @@ export default function StepsTab({ result }) {
     { n:'03', name:'Mixing Water Content',         ref:'ACI 211.1 T6.3.3',   formula:step3.formula,  val:`${step3.waterNominal} kg/m³` },
     { n:'04', name:'Cement Content',               ref:'W ÷ (W/C)',           formula:step4.formula,  val:`${step4.cement.toFixed(1)} kg/m³ · ${step4.cementBags.toFixed(1)} bags` },
     { n:'05', name:'Air Content',                  ref:'ACI 211.1 T6.3.3',   formula:step5.formula,  val:`${step5.airPct}% → ${step5.Vair.toFixed(4)} m³` },
-    { n:'06', name:'Abs. Volumes — Water & Cement',ref:'ACI 211.1 §6.3.7',   formula:step6.formula,  val:`Vw=${step6.Vw.toFixed(4)} · Vc=${step6.Vc.toFixed(4)} m³` },
+    { n:'06', name:'Abs. Volumes - Water & Cement',ref:'ACI 211.1 §6.3.7',   formula:step6.formula,  val:`Vw=${step6.Vw.toFixed(4)} · Vc=${step6.Vc.toFixed(4)} m³` },
     { n:'07', name:'Coarse Aggregate',             ref:'ACI 211.1 T6.3.6',   formula:step7.formula,  val:`${step7.caKgSSD.toFixed(1)} kg · ${step7.Vca.toFixed(4)} m³` },
     { n:'08', name:'Fine Aggregate (by diff.)',    ref:'Volume diff. method', formula:step8.formula,  val:`${step8.faKgSSD.toFixed(1)} kg · ${step8.Vfa.toFixed(4)} m³` },
     { n:'09', name:'Moisture Corrections (field)', ref:'ACI 211.1 §6.3.10',  formula:step9.formula,  val:`W=${step9.waterField.toFixed(1)} · FA=${step9.faField.toFixed(1)} · CA=${step9.caField.toFixed(1)} kg` },

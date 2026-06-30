@@ -1,4 +1,4 @@
-// LibraryPanel.jsx — props-driven (H1: single source of truth in App)
+// LibraryPanel.jsx - props-driven (H1: single source of truth in App)
 export default function LibraryPanel({ library, onLoad, onDelete, onClearAll }) {
   if (library.length === 0) {
     return (
@@ -49,7 +49,7 @@ function LibCard({ entry, onLoad, onDelete }) {
     ? new Date(savedAt).toLocaleDateString(undefined, { day:'2-digit', month:'short', year:'numeric' })
     : ''
 
-  const f = (v, d = 2) => v != null && !isNaN(v) ? Number(v).toFixed(d) : '—'
+  const f = (v, d = 2) => v != null && !isNaN(v) ? Number(v).toFixed(d) : '-'
 
   return (
     <div style={{
@@ -62,7 +62,7 @@ function LibCard({ entry, onLoad, onDelete }) {
       }}>
         <div>
           <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--white)', marginBottom: 2 }}>
-            {inp?.projName ?? '—'} / {inp?.mixId ?? '—'}
+            {inp?.projName ?? '-'} / {inp?.mixId ?? '-'}
           </div>
           <div style={{ fontSize: 11, color: 'var(--muted)' }}>
             {dateStr}{dateStr && inp?.placement ? ' · ' : ''}{inp?.placement ?? ''}
@@ -75,14 +75,14 @@ function LibCard({ entry, onLoad, onDelete }) {
 
       <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', padding: '10px 14px 4px' }}>
         <Stat label="W/CM"    value={f(wc, 3)} />
-        <Stat label="CEMENT"  value={cement != null ? `${Math.round(cement)} kg/m³` : '—'} />
+        <Stat label="CEMENT"  value={cement != null ? `${Math.round(cement)} kg/m³` : '-'} />
         <Stat label="BAGS/M³" value={f(bags, 1)} />
       </div>
       <div style={{ padding: '0 14px 8px' }}>
         <span style={{ fontSize: 12, color: 'var(--muted)' }}>
           F&#x27;CR{' '}
           <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--white)', fontSize: 13 }}>
-            {fcr != null ? `${f(fcr, 1)} MPa` : '—'}
+            {fcr != null ? `${f(fcr, 1)} MPa` : '-'}
           </span>
         </span>
       </div>
@@ -139,7 +139,7 @@ function MatBlock({ label, accent, fieldVal, ssdVal, unit }) {
         {label}
       </div>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: 'var(--white)' }}>
-        {hasField ? `${Math.round(fieldVal)} ${unit}` : hasSSD ? `${Math.round(ssdVal)} ${unit}` : '—'}
+        {hasField ? `${Math.round(fieldVal)} ${unit}` : hasSSD ? `${Math.round(ssdVal)} ${unit}` : '-'}
       </div>
       <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 1 }}>
         {hasField ? 'field-corrected' : hasSSD ? 'design (SSD)' : ''}

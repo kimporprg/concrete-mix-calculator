@@ -1,4 +1,4 @@
-// Mix Library — save, load, compare named mix designs
+// Mix Library - save, load, compare named mix designs
 import { useState, useEffect } from 'react'
 
 const STORAGE_KEY = 'mixdesign-library'

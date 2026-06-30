@@ -19,11 +19,6 @@ export default function App() {
   const [result,  setResult]  = useState(null)
   const [leftTab, setLeftTab] = useState('inputs')
   const [mobileView, setMobileView] = useState('left')
-  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  const [theme, setTheme]     = useLocalStorage('mixdesign-theme', systemDark ? 'dark' : 'light')
-
-  // Apply theme to document root
-  document.documentElement.setAttribute('data-theme', theme === 'light' ? 'light' : '')
 
   function handleCalculate() {
     setResult(designMix(inputs))
@@ -56,16 +51,9 @@ export default function App() {
     if (window.confirm('Delete all saved mixes?')) setLibrary([])
   }
 
-  function toggleTheme() {
-    setTheme(t => t === 'dark' ? 'light' : 'dark')
-  }
-
   const libCount = library.length
 
-  const themeIcon = theme === 'dark' ? '☀️' : '🌙'
-  const themeLabel = theme === 'dark' ? 'Light mode' : 'Dark mode'
-
-  // ── Shared sub-components (stable references via closure) ─────
+  // -- Shared sub-components (stable references via closure) --
   const leftTabBar = (
     <div style={{ display: 'flex', gap: 2 }} role="tablist" aria-label="Left panel tabs">
       {LEFT_TABS.map(t => {
@@ -106,7 +94,7 @@ export default function App() {
 
   return (
     <>
-      {/* ── DESKTOP ── */}
+      {/* -- DESKTOP -- */}
       <div className="desktop-only" style={{
         display: 'grid', gridTemplateColumns: '340px 1fr',
         height: '100dvh', background: 'var(--ink)', overflow: 'hidden',
@@ -129,20 +117,9 @@ export default function App() {
           </div>
           <div style={{
             flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch',
-            padding: '14px 18px 0',
+            padding: '14px 18px',
           }}>
             {leftBody}
-          </div>
-          <div style={{
-            flexShrink: 0, padding: '10px 18px', paddingBottom: 'calc(10px + var(--sab))',
-            borderTop: '1px solid var(--line)',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          }}>
-            <span style={{ fontSize: 12, color: 'var(--muted)' }}>{themeLabel}</span>
-            <button type="button" className="btn-icon" onClick={toggleTheme}
-              aria-label={themeLabel} title={themeLabel}>
-              {themeIcon}
-            </button>
           </div>
         </div>
 
@@ -156,7 +133,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* ── MOBILE ── */}
+      {/* -- MOBILE -- */}
       <div className="mobile-only" style={{
         display: 'flex', flexDirection: 'column',
         height: '100dvh', background: 'var(--ink)', overflow: 'hidden',
@@ -210,19 +187,6 @@ export default function App() {
             ? leftBody
             : <ResultsPanel result={result} onSave={handleSave} />
           }
-        </div>
-
-        <div style={{
-          flexShrink: 0, background: 'var(--ink2)',
-          borderTop: '1px solid var(--line)',
-          padding: '8px 16px', paddingBottom: 'calc(8px + var(--sab))',
-          display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10,
-        }}>
-          <span style={{ fontSize: 12, color: 'var(--muted)' }}>{themeLabel}</span>
-          <button type="button" className="btn-icon" onClick={toggleTheme}
-            aria-label={themeLabel} title={themeLabel}>
-            {themeIcon}
-          </button>
         </div>
       </div>
     </>

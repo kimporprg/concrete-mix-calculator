@@ -1,15 +1,15 @@
-// GuideTab.jsx — In-app reference guide (all data inline, works fully offline)
+// GuideTab.jsx - In-app reference guide (all data inline, works fully offline)
 
 const SECTIONS = [
   {
     id: 'project', color: 'var(--muted)', title: 'Project Information',
     items: [
       { sym: 'Name',   name: 'Project Name',
-        body: 'A label for the project. Appears in the CSV export header. Use something descriptive like "Block A — Ground Slab" so you can identify the file later.' },
+        body: 'A label for the project. Appears in the CSV export header. Use something descriptive like "Block A - Ground Slab" so you can identify the file later.' },
       { sym: 'Mix ID', name: 'Mix ID',
         body: "A short code for this specific design (e.g. MX-B1-01). The exported CSV is named after this ID. Keep each ID unique so files don't overwrite each other." },
       { sym: 'Type',   name: 'Placement Type',
-        body: 'Where the concrete will be placed — Slab, Beam, Column, Footing, or Pavement. Informational only, does not change any calculation.' },
+        body: 'Where the concrete will be placed - Slab, Beam, Column, Footing, or Pavement. Informational only, does not change any calculation.' },
     ],
   },
   {
@@ -17,9 +17,9 @@ const SECTIONS = [
     items: [
       { sym: "f'c", name: 'Specified Compressive Strength',
         body: "The strength your concrete must meet, written on the structural drawings. M25 = f'c 25 MPa. Tapping a Grade button sets this automatically.",
-        extra: { label: 'Think of it as', text: "The pass mark — concrete must score at least this when tested at the design age." } },
+        extra: { label: 'Think of it as', text: "The pass mark - concrete must score at least this when tested at the design age." } },
       { sym: "f'cr", name: "Required Average Strength (OUTPUT)",
-        body: "The design target — always higher than f'c because of batch-to-batch variability. The entire mix is proportioned to hit this number.",
+        body: "The design target - always higher than f'c because of batch-to-batch variability. The entire mix is proportioned to hit this number.",
         extra: { label: 'Formula', mono: true,
           text: "f'c < 35 MPa: max(f'c + 1.34s,  f'c + 2.33s − 3.45)\nf'c ≥ 35 MPa: max(f'c + 1.34s,  0.9·f'c + 2.33s)" } },
       { sym: 's', name: 'Standard Deviation',
@@ -33,16 +33,16 @@ const SECTIONS = [
     id: 'workability', color: '#1E8E5A', title: 'Workability & Aggregate',
     items: [
       { sym: 'Slump', name: 'Target Slump Range',
-        body: 'How fluid the fresh concrete is — more slump needs more water, which raises W/C and reduces strength. Drives the mixing water lookup in ACI Table 6.3.3.',
+        body: 'How fluid the fresh concrete is - more slump needs more water, which raises W/C and reduces strength. Drives the mixing water lookup in ACI Table 6.3.3.',
         extra: { label: 'Options',
           text: '25–50 mm → stiff, pavements\n75–100 mm → standard reinforced concrete (recommended)\n100–150 mm → congested steel, pump mixes\n150–175 mm → very fluid (better to use a plasticiser)' } },
       { sym: 'MAS',  name: 'Max. Aggregate Size',
         body: 'Largest coarse particle size. Larger aggregate needs less water for the same slump (less surface area to coat), reducing cement. Limited by rebar spacing.',
         extra: { label: 'Common', text: '10 mm thin/congested · 19 mm general use (recommended) · 25–37.5 mm mass concrete' } },
       { sym: 'Cem.', name: 'Cement Type',
-        body: 'Identifies the binder. Informational only — label appears in the export but does not change any ACI number.',
+        body: 'Identifies the binder. Informational only - label appears in the export but does not change any ACI number.',
         extra: { label: 'Options',
-          text: 'OPC / Type I — standard structural concrete\nType II — moderate sulphate resistance\nType III — high early strength, faster strip\nPPC — blended with fly ash, slower gain, better durability' } },
+          text: 'OPC / Type I - standard structural concrete\nType II - moderate sulphate resistance\nType III - high early strength, faster strip\nPPC - blended with fly ash, slower gain, better durability' } },
       { sym: 'Air',  name: 'Air Entrainment',
         body: 'Non-air → standard for tropical & general structural concrete.\nAir-entrained → bubbles added by admixture for freeze-thaw durability. Changes all ACI lookup tables.',
         extra: { label: 'For SE Asia', text: 'Select Non-air for most projects. Air entrainment is required by ACI 318 only for freeze-thaw or de-icing salt exposure.' } },
@@ -61,7 +61,7 @@ const SECTIONS = [
         body: 'One number that describes how coarse or fine your sand is overall, from a sieve analysis. Higher FM = coarser sand. Controls the ACI Table 6.3.6 CA fraction lookup.',
         extra: { label: 'Range', text: '2.3 very fine → 2.6–2.8 typical river sand → 3.1 coarse\nNote: wrong FM shifts CA content by 30–50 kg/m³.' } },
       { sym: 'MC fa',  name: 'FA Moisture Content (%)',
-        body: 'Free surface water on the sand right now, as % of dry mass. The app adds this weight to the sand batch mass and removes it from added water — so W/C stays correct.',
+        body: 'Free surface water on the sand right now, as % of dry mass. The app adds this weight to the sand batch mass and removes it from added water - so W/C stays correct.',
         extra: { label: 'Important', text: 'Measure on the day of casting. Changes with weather. Typical stockpile: 1–5%.' } },
       { sym: 'Abs fa', name: 'FA Absorption (%)',
         body: 'Maximum water sand pores can absorb (SSD basis). Fixed material property. The correction uses MC minus Abs to find the net free surface moisture.',
@@ -78,7 +78,7 @@ const SECTIONS = [
         body: 'Mass of coarse aggregate that fits in 1 m³ when dry-rodded in a standard container. Accounts for voids between particles. Multiplied by the ACI 6.3.6 CA fraction to get kg/m³.',
         extra: { label: 'Formula', mono: true, text: 'CA (kg/m³) = b/b₀ × DRUW\nTypical: 1450–1750 kg/m³. Test per ASTM C29.' } },
       { sym: 'MC ca',  name: 'CA Moisture Content (%)',
-        body: 'Free surface water on coarse aggregate. Same correction as FA — CA batch mass increases, added water decreases by the same amount.',
+        body: 'Free surface water on coarse aggregate. Same correction as FA - CA batch mass increases, added water decreases by the same amount.',
         extra: { label: 'Typical', text: '0.5–2.0% for stockpiled crushed stone. Measure on casting day.' } },
       { sym: 'Abs ca', name: 'CA Absorption (%)',
         body: 'Maximum water the CA particles absorb into their pores. Fixed material property. Used with CA moisture in the Step 9 field correction.',
@@ -98,17 +98,17 @@ const SECTIONS = [
         extra: { label: 'Formula', mono: true, text: 'Cement (kg/m³) = Water (kg/m³) ÷ W/C' } },
       { sym: 'Bags',    name: 'Cement Bags / m³',
         body: 'Cement ÷ 50. Practical procurement number. Multiply by total pour volume (Quantity tab) to get your cement order.' },
-      { sym: 'W field', name: 'Water — Field Corrected',
+      { sym: 'W field', name: 'Water - Field Corrected',
         body: "Actual water you add at the mixer, after subtracting free moisture brought in by the wet aggregates. Always batch from this number, not the raw design water.",
         extra: { label: 'Key', text: 'If aggregates are wet, this is lower than the design water. Using design water on wet agg makes the mix too wet.' } },
       { sym: 'Air%',    name: 'Air Content',
-        body: 'Percentage of concrete volume occupied by air voids. Looked up from ACI Table 6.3.3 — not calculated. Non-air typical: 1–3%.' },
+        body: 'Percentage of concrete volume occupied by air voids. Looked up from ACI Table 6.3.3 - not calculated. Non-air typical: 1–3%.' },
       { sym: 'SSD',     name: 'SSD vs. Field Quantities',
         body: "SSD = design quantities assuming perfectly neutral aggregates (pores filled, surface dry). Field = actual batch masses after moisture correction. Always batch using FIELD quantities.",
         extra: { label: 'Example', mono: true,
           text: 'Sand SSD=680 kg · MC=3.5% · Abs=1.2%\nField sand = 680×1.035 = 703.8 kg\nWater offset = 680×(3.5−1.2)/100 = 15.6 kg\nAdded water reduced by 15.6 kg' } },
       { sym: 'Yield',   name: 'Total Volume (Yield)',
-        body: 'Sum of all absolute volumes. Must equal ≈ 1.000 m³. Deviation > 2.5% means a specific gravity input is likely wrong — check Gc, Gfa, Gca.',
+        body: 'Sum of all absolute volumes. Must equal ≈ 1.000 m³. Deviation > 2.5% means a specific gravity input is likely wrong - check Gc, Gfa, Gca.',
         extra: { label: 'Formula', mono: true, text: 'Vw + Vc + Vair + Vca + Vfa ≈ 1.000 m³' } },
     ],
   },
@@ -116,7 +116,7 @@ const SECTIONS = [
     id: 'warnings', color: 'var(--warn)', title: 'Compliance Warnings',
     items: [
       { sym: 'W/C>0.60', name: 'W/C Too High',
-        body: 'Durability suffers — paste is too porous. Fix: reduce slump, increase aggregate size, or add a water-reducing plasticiser (10–15% water saving at same slump).' },
+        body: 'Durability suffers - paste is too porous. Fix: reduce slump, increase aggregate size, or add a water-reducing plasticiser (10–15% water saving at same slump).' },
       { sym: 'C<280',    name: 'Cement Below Minimum',
         body: 'Below ACI 211.1 min of 280 kg/m³. Not enough paste to coat aggregates. Check if the project spec sets a minimum (often 300 kg/m³ for exposed RC).' },
       { sym: 'C>540',    name: 'Cement Too High',
@@ -142,7 +142,7 @@ export default function GuideTab() {
           Field & Output Reference
         </div>
         <div style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>
-          Every input and result explained — what it means, why it matters, and how it affects your mix.
+          Every input and result explained - what it means, why it matters, and how it affects your mix.
         </div>
       </div>
 

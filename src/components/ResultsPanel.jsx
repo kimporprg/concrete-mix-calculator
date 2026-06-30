@@ -47,7 +47,7 @@ export default function ResultsPanel({ result, onSave }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
           <div>
             <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--white)' }}>
-              {inp?.projName} — {inp?.mixId}
+              {inp?.projName} - {inp?.mixId}
             </div>
             <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
               {inp?.grade} · {inp?.placement} · {inp?.cementType}
@@ -68,12 +68,12 @@ export default function ResultsPanel({ result, onSave }) {
       {/* 6 metric tiles */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, marginBottom: 10, flexShrink: 0 }}>
         {[
-          { label:"f'cr",  value: fcr    != null ? fcr.toFixed(1)    : '—', unit:'MPa' },
-          { label:'W/C',   value: wc     != null ? wc.toFixed(3)     : '—', unit:'ratio' },
-          { label:'Cement',value: cement != null ? Math.round(cement): '—', unit:'kg/m³' },
-          { label:'Bags',  value: bags   != null ? bags.toFixed(1)   : '—', unit:'per m³' },
-          { label:'Water', value: waterF != null ? Math.round(waterF): '—', unit:'kg field' },
-          { label:'Air',   value: airPct != null ? airPct.toFixed(1) : '—', unit:'%' },
+          { label:"f'cr",  value: fcr    != null ? fcr.toFixed(1)    : '-', unit:'MPa' },
+          { label:'W/C',   value: wc     != null ? wc.toFixed(3)     : '-', unit:'ratio' },
+          { label:'Cement',value: cement != null ? Math.round(cement): '-', unit:'kg/m³' },
+          { label:'Bags',  value: bags   != null ? bags.toFixed(1)   : '-', unit:'per m³' },
+          { label:'Water', value: waterF != null ? Math.round(waterF): '-', unit:'kg field' },
+          { label:'Air',   value: airPct != null ? airPct.toFixed(1) : '-', unit:'%' },
         ].map(t => (
           <div key={t.label} className="metric-tile">
             <div className="metric-label">{t.label}</div>
@@ -90,7 +90,7 @@ export default function ResultsPanel({ result, onSave }) {
         ))}
       </div>
 
-      {/* Tab bar — M4: role=tablist */}
+      {/* Tab bar - M4: role=tablist */}
       <div className="tabs" style={{ marginTop: 10, marginBottom: 10, flexShrink: 0 }}
         role="tablist" aria-label="Results tabs">
         {TABS.map(t => (

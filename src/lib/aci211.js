@@ -1,4 +1,4 @@
-// aci211.js — ACI 211.1 absolute-volume mix design engine
+// aci211.js - ACI 211.1 absolute-volume mix design engine
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 
@@ -43,8 +43,8 @@ export const DEFAULT_INPUTS = {
   caAbsorb:   0.5,
 }
 
-// ─── ACI 211.1 Table 6.3.3 — Mixing Water (kg/m³) ─────────────────────────
-// Keys: slump range → agg size → [non-air, air-entrained]
+// ─── ACI 211.1 Table 6.3.3 - Mixing Water (kg/m³) ─────────────────────────
+// Keys: slump range -> agg size -> [non-air, air-entrained]
 const WATER_TABLE = {
   '25-50': {
     10:   [207, 181],
@@ -76,13 +76,13 @@ const WATER_TABLE = {
   },
 }
 
-// ACI 211.1 Table 6.3.3 — Approximate air content (%)
+// ACI 211.1 Table 6.3.3 - Approximate air content (%)
 const AIR_TABLE = {
   non: { 10: 3, 12.5: 2.5, 19: 2, 25: 1.5, 37.5: 1 },
   air: { 10: 6, 12.5: 5.5, 19: 5, 25: 4.5, 37.5: 4.5 },
 }
 
-// ACI 211.1 Table 6.3.4a — Max W/C for strength (non-air, by 28-day f'c MPa)
+// ACI 211.1 Table 6.3.4a - Max W/C for strength (non-air, by 28-day f'c MPa)
 // Interpolated: [fc_mpa, wc]
 const WC_TABLE_NON_AIR = [
   [17, 0.67], [21, 0.58], [24, 0.53],
@@ -94,8 +94,8 @@ const WC_TABLE_AIR = [
   [28, 0.35], [31, 0.30],
 ]
 
-// ACI 211.1 Table 6.3.6 — Vol. of CA per unit vol. concrete (b/b₀)
-// [MAS → { FM: fraction }] — interpolate between FM values
+// ACI 211.1 Table 6.3.6 - Vol. of CA per unit vol. concrete (b/b₀)
+// [MAS -> { FM: fraction }] - interpolate between FM values
 const CA_TABLE = {
   10:   { 2.40: 0.50, 2.60: 0.48, 2.80: 0.46, 3.00: 0.44 },
   12.5: { 2.40: 0.59, 2.60: 0.57, 2.80: 0.55, 3.00: 0.53 },
@@ -172,12 +172,12 @@ export function designMix(inp) {
   // ── Step 2: W/C ───────────────────────────────────────────────
   const wcTable = isAir ? WC_TABLE_AIR : WC_TABLE_NON_AIR
   const wc = Math.min(interpolate(wcTable, fcr), 0.70)
-  const step2 = { wc, formula: `Interpolated from ACI T6.3.4a at f'cr=${fcr.toFixed(2)} MPa → W/C=${wc.toFixed(3)}` }
+  const step2 = { wc, formula: `Interpolated from ACI T6.3.4a at f'cr=${fcr.toFixed(2)} MPa -> W/C=${wc.toFixed(3)}` }
 
   // ── Step 3: Mixing water ───────────────────────────────────────
   const waterRow  = WATER_TABLE[slump]?.[masKey] ?? WATER_TABLE['75-100'][19]
   const waterNominal = waterRow[isAir ? 1 : 0]
-  const step3 = { waterNominal, formula: `ACI T6.3.3: slump=${slump}, MAS=${masKey}mm, ${isAir?'air':'non-air'} → ${waterNominal} kg/m³` }
+  const step3 = { waterNominal, formula: `ACI T6.3.3: slump=${slump}, MAS=${masKey}mm, ${isAir?'air':'non-air'} -> ${waterNominal} kg/m³` }
 
   // ── Step 4: Cement ────────────────────────────────────────────
   const cement = waterNominal / wc
@@ -190,7 +190,7 @@ export function designMix(inp) {
   // ── Step 5: Air ───────────────────────────────────────────────
   const airPct = AIR_TABLE[airType]?.[masKey] ?? 2
   const Vair   = airPct / 100
-  const step5  = { airPct, Vair, formula: `ACI T6.3.3: ${isAir?'air-entrained':'non-air'}, MAS=${masKey}mm → ${airPct}%` }
+  const step5  = { airPct, Vair, formula: `ACI T6.3.3: ${isAir?'air-entrained':'non-air'}, MAS=${masKey}mm -> ${airPct}%` }
 
   // ── Step 6: Abs. volumes of water & cement ────────────────────
   const Vw = waterNominal / 1000
@@ -243,18 +243,18 @@ export function designMix(inp) {
   // ── Warnings ──────────────────────────────────────────────────
   const warnings = []
   if (wc > 0.60)
-    warnings.push({ level: 'warn', msg: `W/C = ${wc.toFixed(3)} exceeds 0.60 — durability concern (ACI 318).` })
+    warnings.push({ level: 'warn', msg: `W/C = ${wc.toFixed(3)} exceeds 0.60 - durability concern (ACI 318).` })
   if (cement < 280)
     warnings.push({ level: 'warn', msg: `Cement = ${cement.toFixed(0)} kg/m³ is below ACI min of 280 kg/m³.` })
   if (cement > 540)
-    warnings.push({ level: 'warn', msg: `Cement = ${cement.toFixed(0)} kg/m³ exceeds 540 kg/m³ — thermal cracking risk.` })
+    warnings.push({ level: 'warn', msg: `Cement = ${cement.toFixed(0)} kg/m³ exceeds 540 kg/m³ - thermal cracking risk.` })
   const faSharePct = Vfa / totalVol * 100
   if (faSharePct < 25)
-    warnings.push({ level: 'warn', msg: `FA volume = ${faSharePct.toFixed(1)}% is below 25% — harsh mix.` })
+    warnings.push({ level: 'warn', msg: `FA volume = ${faSharePct.toFixed(1)}% is below 25% - harsh mix.` })
   if (faSharePct > 45)
-    warnings.push({ level: 'warn', msg: `FA volume = ${faSharePct.toFixed(1)}% exceeds 45% — high shrinkage risk.` })
+    warnings.push({ level: 'warn', msg: `FA volume = ${faSharePct.toFixed(1)}% exceeds 45% - high shrinkage risk.` })
   if (Math.abs(totalVol - 1) > 0.025)
-    warnings.push({ level: 'warn', msg: `Yield = ${totalVol.toFixed(4)} m³ deviates >2.5% from 1.000 — check Gc, Gfa, Gca.` })
+    warnings.push({ level: 'warn', msg: `Yield = ${totalVol.toFixed(4)} m³ deviates >2.5% from 1.000 - check Gc, Gfa, Gca.` })
   if (warnings.length === 0)
     warnings.push({ level: 'ok', msg: 'All ACI 211.1 compliance checks passed.' })
 

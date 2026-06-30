@@ -22,7 +22,7 @@ export default function MaterialsTab({ result }) {
 
   function exportCSV() {
     const rows = [
-      ['MixDesign — ACI 211.1 Export'],
+      ['MixDesign - ACI 211.1 Export'],
       ['Project', inp.projName], ['Mix ID', inp.mixId], ['Grade', inp.grade],
       ["f'c (MPa)", inp.fc], ['Std. Dev.', inp.stddev], ['Slump', inp.slump],
       ['Max Agg (mm)', inp.maxAgg], ['Air Type', inp.airType], ['Cement Type', inp.cementType],
