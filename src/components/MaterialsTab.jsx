@@ -13,10 +13,10 @@ export default function MaterialsTab({ result }) {
   const pct   = v => (v / total * 100).toFixed(1)
 
   const BARS = [
-    { label:'Cement',        val:cement, pct:pct(cement), color:'#0071E3' },
-    { label:'Water (SSD)',   val:waterS, pct:pct(waterS), color:'#5FA8E8' },
-    { label:'Sand (SSD)',    val:sandS,  pct:pct(sandS),  color:'#B9740A' },
-    { label:'Coarse Agg.',   val:caS,    pct:pct(caS),    color:'#6E6E73' },
+    { label:'Cement',      val:cement, pct:pct(cement), color:'var(--accent)' },
+    { label:'Water (SSD)', val:waterS, pct:pct(waterS), color:'#5FA8E8' },
+    { label:'Sand (SSD)',  val:sandS,  pct:pct(sandS),  color:'var(--warn)' },
+    { label:'Coarse Agg.', val:caS,    pct:pct(caS),    color:'var(--muted)' },
   ]
   const maxVal = Math.max(cement, waterS, sandS, caS)
 
@@ -41,15 +41,18 @@ export default function MaterialsTab({ result }) {
       ['Coarse Agg Field (kg/m³)', caF.toFixed(1)],
     ]
     const csv = rows.map(r => r.map(v => `"${v ?? ''}"`).join(',')).join('\n')
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }))
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url  = URL.createObjectURL(blob)
+    const a    = document.createElement('a')
+    a.href     = url
     a.download = `mix-${inp.mixId}.csv`
     a.click()
+    // L1: revoke after browser has had a tick to initiate download
+    setTimeout(() => URL.revokeObjectURL(url), 100)
   }
 
   return (
     <div>
-      {/* Bar chart */}
       <div className="card" style={{ marginBottom: 12 }}>
         <div className="section-label">Proportions (kg/m³)</div>
         {BARS.map(b => (
@@ -61,13 +64,12 @@ export default function MaterialsTab({ result }) {
               </span>
             </div>
             <div className="bar-track">
-              <div className="bar-fill" style={{ width: `${(b.val/maxVal)*100}%`, background: b.color }} />
+              <div className="bar-fill" style={{ width:`${(b.val/maxVal)*100}%`, background:b.color }} />
             </div>
           </div>
         ))}
       </div>
 
-      {/* SSD vs Field table */}
       <div className="card" style={{ marginBottom: 12 }}>
         <div className="section-label">SSD vs. Field Quantities</div>
         <table style={{ width:'100%', borderCollapse:'collapse', fontSize:12 }}>
@@ -80,10 +82,10 @@ export default function MaterialsTab({ result }) {
           </thead>
           <tbody>
             {[
-              ['Cement',   cement.toFixed(1),  cement.toFixed(1)],
-              ['Water',    waterS,              waterF.toFixed(1)],
-              ['Sand',     sandS.toFixed(1),   sandF.toFixed(1)],
-              ['Coarse',   caS.toFixed(1),     caF.toFixed(1)],
+              ['Cement', cement.toFixed(1), cement.toFixed(1)],
+              ['Water',  waterS,             waterF.toFixed(1)],
+              ['Sand',   sandS.toFixed(1),   sandF.toFixed(1)],
+              ['Coarse', caS.toFixed(1),     caF.toFixed(1)],
             ].map(([m,s,f]) => (
               <tr key={m}>
                 <td style={{ padding:'7px 8px', color:'var(--white)', fontWeight:600 }}>{m}</td>
@@ -95,7 +97,6 @@ export default function MaterialsTab({ result }) {
         </table>
       </div>
 
-      {/* Mix ratio */}
       <div className="card" style={{ marginBottom: 12 }}>
         <div className="section-label">Mix Ratio</div>
         <div style={{ fontFamily:'var(--font-mono)', fontSize:18, fontWeight:700, color:'var(--white)', textAlign:'center', padding:'8px 0' }}>
@@ -104,8 +105,7 @@ export default function MaterialsTab({ result }) {
         <div style={{ textAlign:'center', fontSize:11, color:'var(--muted)' }}>Cement : Fine Agg. : Coarse Agg.</div>
       </div>
 
-      {/* Export */}
-      <button onClick={exportCSV} className="btn btn-ghost btn-full" style={{ marginTop: 4 }}>
+      <button type="button" onClick={exportCSV} className="btn btn-ghost btn-full" style={{ marginTop: 4 }}>
         ⬇ Export CSV
       </button>
     </div>

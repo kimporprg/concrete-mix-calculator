@@ -30,7 +30,7 @@ export default function QuantityTab({ result }) {
       <div className="section-label">Element Type</div>
       <div className="pill-group" style={{ marginBottom: 16 }}>
         {ELEMENTS.map(e => (
-          <button key={e.key}
+          <button type="button" key={e.key}
             className={`pill ${type === e.key ? 'active' : ''}`}
             onClick={() => { setType(e.key); setDims({}); setQty(null) }}>
             {e.label}
@@ -51,7 +51,7 @@ export default function QuantityTab({ result }) {
         ))}
       </div>
 
-      <button onClick={compute} className="btn btn-primary btn-full">
+      <button type="button" onClick={compute} className="btn btn-primary btn-full">
         Compute Quantities
       </button>
 

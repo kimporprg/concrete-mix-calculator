@@ -1,4 +1,4 @@
-// ResultsPanel.jsx — Steps / Materials / Volumes / Quantity tabs
+// ResultsPanel.jsx
 import { useState } from 'react'
 import StepsTab     from './StepsTab'
 import MaterialsTab from './MaterialsTab'
@@ -53,18 +53,20 @@ export default function ResultsPanel({ result, onSave }) {
               {inp?.grade} · {inp?.placement} · {inp?.cementType}
             </div>
           </div>
-          <button onClick={onSave} className="btn btn-primary"
-            style={{ minHeight: 36, padding: '0 14px', fontSize: 12, borderRadius: 7, flexShrink: 0 }}>
-            Save
+          <button
+            type="button"
+            onClick={onSave}
+            className="btn btn-primary"
+            aria-label="Save mix to library"
+            style={{ minHeight: 36, padding: '0 14px', fontSize: 12, borderRadius: 7, flexShrink: 0 }}
+          >
+            Save to Library
           </button>
         </div>
       </div>
 
       {/* 6 metric tiles */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(3,1fr)',
-        gap: 8, marginBottom: 10, flexShrink: 0,
-      }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, marginBottom: 10, flexShrink: 0 }}>
         {[
           { label:"f'cr",  value: fcr    != null ? fcr.toFixed(1)    : '—', unit:'MPa' },
           { label:'W/C',   value: wc     != null ? wc.toFixed(3)     : '—', unit:'ratio' },
@@ -84,22 +86,30 @@ export default function ResultsPanel({ result, onSave }) {
       {/* Compliance alerts */}
       <div style={{ flexShrink: 0 }}>
         {warnings?.map((w, i) => (
-          <div key={i} className={`alert alert-${w.level}`}>{w.msg}</div>
+          <div key={i} className={`alert alert-${w.level}`} role="alert">{w.msg}</div>
         ))}
       </div>
 
-      {/* Tab bar */}
-      <div className="tabs" style={{ marginTop: 10, marginBottom: 10, flexShrink: 0 }}>
+      {/* Tab bar — M4: role=tablist */}
+      <div className="tabs" style={{ marginTop: 10, marginBottom: 10, flexShrink: 0 }}
+        role="tablist" aria-label="Results tabs">
         {TABS.map(t => (
-          <button key={t.id} className={`tab ${tab === t.id ? 'active' : ''}`}
-            onClick={() => setTab(t.id)}>
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === t.id}
+            className={`tab ${tab === t.id ? 'active' : ''}`}
+            onClick={() => setTab(t.id)}
+          >
             {t.label}
           </button>
         ))}
       </div>
 
       {/* Tab body */}
-      <div style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
+      <div style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}
+        role="tabpanel">
         {tab === 'steps'     && <StepsTab     result={result} />}
         {tab === 'materials' && <MaterialsTab result={result} />}
         {tab === 'volumes'   && <VolumesTab   result={result} />}

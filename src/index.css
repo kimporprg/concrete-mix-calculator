@@ -1,32 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
 
-/* ─── Tokens ──────────────────────────────────────────────────── */
+/* ─── Dark tokens (default) ───────────────────────────────────── */
 :root {
-  --ink:       #FAFAFA;   /* page background */
-  --ink2:      #FFFFFF;   /* card / panel surface */
-  --steel:     #F0F0F2;   /* recessed surface (wells, track backgrounds) */
-  --mid:       #86868B;   /* tertiary text */
-  --muted:     #6E6E73;   /* secondary text */
+  --ink:       #0F2027;
+  --ink2:      #1B3442;
+  --steel:     #243342;
+  --mid:       #5D7185;
+  --muted:     #8FA3B1;
+  --line:      rgba(255,255,255,0.08);
+  --surface:   rgba(255,255,255,0.04);
+  --white:     #F0F4F7;
+  --accent:    #1D9AE8;
+  --accent-lt: rgba(29,154,232,0.12);
+  --accent-dk: #1278BC;
+  --warn:      #E0A030;
+  --ok:        #30B87A;
+  --danger:    #E05252;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+  --r-sm: 8px; --r-md: 12px; --r-lg: 18px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.25), 0 1px 1px rgba(0,0,0,0.2);
+  --shadow-md: 0 2px 10px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.4),  0 2px 6px rgba(0,0,0,0.2);
+  --sat: env(safe-area-inset-top,    0px);
+  --sar: env(safe-area-inset-right,  0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left,   0px);
+}
+
+/* ─── Light tokens ────────────────────────────────────────────── */
+[data-theme="light"] {
+  --ink:       #FAFAFA;
+  --ink2:      #FFFFFF;
+  --steel:     #F0F0F2;
+  --mid:       #86868B;
+  --muted:     #6E6E73;
   --line:      rgba(0,0,0,0.08);
   --surface:   rgba(0,0,0,0.035);
-  --white:     #1D1D1F;   /* primary text — near-black on this light theme */
+  --white:     #1D1D1F;
   --accent:    #0071E3;
   --accent-lt: rgba(0,113,227,0.08);
   --accent-dk: #0058B0;
   --warn:      #B9740A;
   --ok:        #1E8E5A;
   --danger:    #D83A2E;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
-  --r-sm: 8px; --r-md: 12px; --r-lg: 18px;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.03);
   --shadow-md: 0 2px 10px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   --shadow-lg: 0 8px 30px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
-  /* safe area */
-  --sat: env(safe-area-inset-top,    0px);
-  --sar: env(safe-area-inset-right,  0px);
-  --sab: env(safe-area-inset-bottom, 0px);
-  --sal: env(safe-area-inset-left,   0px);
 }
 
 /* ─── Reset ──────────────────────────────────────────────────── */
@@ -47,11 +67,11 @@ body {
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   scrollbar-width: thin;
-  scrollbar-color: #D2D2D7 transparent;
+  scrollbar-color: var(--steel) transparent;
 }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-thumb { background: #D2D2D7; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--steel); border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
 /* ─── Layout helpers ──────────────────────────────────────────── */
@@ -74,7 +94,7 @@ body {
 
 .btn-primary {
   background: var(--accent); color: #FFFFFF;
-  box-shadow: 0 1px 3px rgba(0,113,227,0.3);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 .btn-primary:hover { background: var(--accent-dk); }
 
@@ -82,17 +102,24 @@ body {
   background: var(--ink2); color: var(--muted);
   border: 1px solid var(--line);
 }
-.btn-ghost:hover { border-color: #C7C7CC; color: var(--white); }
+.btn-ghost:hover { border-color: var(--muted); color: var(--white); }
 
 .btn-danger {
   background: transparent; color: var(--danger);
   border: 1px solid rgba(216,58,46,0.35);
 }
-.btn-danger:hover { background: rgba(216,58,46,0.06); }
+.btn-danger:hover { background: rgba(216,58,46,0.08); }
+
+.btn-icon {
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 0 10px; min-height: 36px; border-radius: var(--r-sm);
+  font-size: 16px;
+}
+.btn-icon:hover { color: var(--white); border-color: var(--muted); }
 
 .btn-full { width: 100%; }
 
-/* Mobile: even bigger buttons */
 @media (max-width: 767px) {
   .btn { min-height: 52px; font-size: 15px; border-radius: var(--r-lg); }
   .btn-sm-mobile { min-height: 44px !important; font-size: 13px !important; }
@@ -146,16 +173,16 @@ body {
   border-radius: var(--r-sm); padding: 10px 14px;
   font-size: 13px; line-height: 1.45; margin-bottom: 6px;
 }
-.alert-ok     { background: rgba(30,142,90,0.08);  color: #1E8E5A; border-left: 3px solid var(--ok); }
-.alert-warn   { background: rgba(185,116,10,0.08); color: #B9740A; border-left: 3px solid var(--warn); }
-.alert-danger { background: rgba(216,58,46,0.08);  color: #D83A2E; border-left: 3px solid var(--danger); }
+.alert-ok     { background: rgba(48,184,122,0.1);  color: var(--ok);     border-left: 3px solid var(--ok); }
+.alert-warn   { background: rgba(224,160,48,0.1);  color: var(--warn);   border-left: 3px solid var(--warn); }
+.alert-danger { background: rgba(224,82,82,0.1);   color: var(--danger); border-left: 3px solid var(--danger); }
 
 /* ─── Badges ──────────────────────────────────────────────────── */
 .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-.badge-ok     { background: rgba(30,142,90,0.1);   color: #1E8E5A; }
-.badge-warn   { background: rgba(185,116,10,0.1);  color: #B9740A; }
-.badge-danger { background: rgba(216,58,46,0.1);   color: #D83A2E; }
-.badge-grade  { background: var(--ok);             color: #FFFFFF; }
+.badge-ok     { background: rgba(48,184,122,0.15);  color: var(--ok); }
+.badge-warn   { background: rgba(224,160,48,0.15);  color: var(--warn); }
+.badge-danger { background: rgba(224,82,82,0.15);   color: var(--danger); }
+.badge-grade  { background: var(--ok);              color: #FFFFFF; }
 
 /* ─── Bar track ───────────────────────────────────────────────── */
 .bar-track { height: 6px; background: var(--steel); border-radius: 3px; overflow: hidden; }
@@ -186,7 +213,7 @@ body {
 
 .field-input {
   width: 100%;
-  background: var(--ink2); border: 1px solid var(--line);
+  background: var(--steel); border: 1px solid var(--line);
   border-radius: var(--r-sm); color: var(--white);
   font-family: var(--font-body); font-size: 14px;
   padding: 10px 12px;
