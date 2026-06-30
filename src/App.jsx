@@ -119,33 +119,30 @@ export default function App() {
           borderRight: '1px solid var(--line)',
         }}>
           <div style={{ padding: 'calc(14px + var(--sat)) 18px 0', flexShrink: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--white)', letterSpacing: '-0.5px' }}>
-                  Concrete Design Calculator
-                </div>
-                <div style={{ fontSize: 10, color: 'var(--mid)', marginTop: 4 }}>
-                  By Lyhour Oem &amp; Kimpor Kang
-                </div>
-              </div>
-              <button
-                type="button"
-                className="btn-icon"
-                onClick={toggleTheme}
-                aria-label={themeLabel}
-                title={themeLabel}
-                style={{ marginTop: 2, flexShrink: 0 }}
-              >
-                {themeIcon}
-              </button>
+            <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--white)', letterSpacing: '-0.5px' }}>
+              Concrete Design Calculator
+            </div>
+            <div style={{ fontSize: 10, color: 'var(--mid)', marginTop: 4 }}>
+              By Lyhour Oem &amp; Kimpor Kang
             </div>
             <div style={{ marginTop: 14 }}>{leftTabBar}</div>
           </div>
           <div style={{
             flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch',
-            padding: '14px 18px calc(16px + var(--sab))',
+            padding: '14px 18px 0',
           }}>
             {leftBody}
+          </div>
+          <div style={{
+            flexShrink: 0, padding: '10px 18px', paddingBottom: 'calc(10px + var(--sab))',
+            borderTop: '1px solid var(--line)',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            <span style={{ fontSize: 12, color: 'var(--muted)' }}>{themeLabel}</span>
+            <button type="button" className="btn-icon" onClick={toggleTheme}
+              aria-label={themeLabel} title={themeLabel}>
+              {themeIcon}
+            </button>
           </div>
         </div>
 
@@ -180,15 +177,6 @@ export default function App() {
               </div>
             </div>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              <button
-                type="button"
-                className="btn-icon"
-                onClick={toggleTheme}
-                aria-label={themeLabel}
-                title={themeLabel}
-              >
-                {themeIcon}
-              </button>
               {[['left','Inputs'],['results','Results']].map(([v,l]) => (
                 <button
                   key={v}
@@ -224,7 +212,18 @@ export default function App() {
           }
         </div>
 
-        <div style={{ height: 'var(--sab)', background: 'var(--ink2)', flexShrink: 0 }} />
+        <div style={{
+          flexShrink: 0, background: 'var(--ink2)',
+          borderTop: '1px solid var(--line)',
+          padding: '8px 16px', paddingBottom: 'calc(8px + var(--sab))',
+          display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10,
+        }}>
+          <span style={{ fontSize: 12, color: 'var(--muted)' }}>{themeLabel}</span>
+          <button type="button" className="btn-icon" onClick={toggleTheme}
+            aria-label={themeLabel} title={themeLabel}>
+            {themeIcon}
+          </button>
+        </div>
       </div>
     </>
   )
